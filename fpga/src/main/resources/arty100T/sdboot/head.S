@@ -19,3 +19,4 @@ _prog_start:
   .section .dtb
   .align 3
 dtb:
+//.incbin "device.dtb"

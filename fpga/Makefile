@@ -14,63 +14,8 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= vcu118
+SUB_PROJECT ?= arty100t
 
-ifeq ($(SUB_PROJECT),vc707)
-	SBT_PROJECT       ?= fpga_platforms
-	MODEL             ?= VC707FPGATestHarness
-	VLOG_MODEL        ?= VC707FPGATestHarness
-	MODEL_PACKAGE     ?= chipyard.fpga.vc707
-	CONFIG            ?= RocketVC707Config
-	CONFIG_PACKAGE    ?= chipyard.fpga.vc707
-	GENERATOR_PACKAGE ?= chipyard
-	TB                ?= none # unused
-	TOP               ?= ChipTop
-	BOARD             ?= vc707
-	FPGA_BRAND        ?= xilinx
-endif
-
-ifeq ($(SUB_PROJECT),vcu118)
-	SBT_PROJECT       ?= fpga_platforms
-	MODEL             ?= VCU118FPGATestHarness
-	VLOG_MODEL        ?= VCU118FPGATestHarness
-	MODEL_PACKAGE     ?= chipyard.fpga.vcu118
-	CONFIG            ?= RocketVCU118Config
-	CONFIG_PACKAGE    ?= chipyard.fpga.vcu118
-	GENERATOR_PACKAGE ?= chipyard
-	TB                ?= none # unused
-	TOP               ?= ChipTop
-	BOARD             ?= vcu118
-	FPGA_BRAND        ?= xilinx
-endif
-
-ifeq ($(SUB_PROJECT),bringup)
-	SBT_PROJECT       ?= fpga_platforms
-	MODEL             ?= BringupVCU118FPGATestHarness
-	VLOG_MODEL        ?= BringupVCU118FPGATestHarness
-	MODEL_PACKAGE     ?= chipyard.fpga.vcu118.bringup
-	CONFIG            ?= RocketBringupConfig
-	CONFIG_PACKAGE    ?= chipyard.fpga.vcu118.bringup
-	GENERATOR_PACKAGE ?= chipyard
-	TB                ?= none # unused
-	TOP               ?= ChipTop
-	BOARD             ?= vcu118
-	FPGA_BRAND        ?= xilinx
-endif
-ifeq ($(SUB_PROJECT),arty)
-	# TODO: Fix with Arty
-	SBT_PROJECT       ?= fpga_platforms
-	MODEL             ?= ArtyFPGATestHarness
-	VLOG_MODEL        ?= ArtyFPGATestHarness
-	MODEL_PACKAGE     ?= chipyard.fpga.arty
-	CONFIG            ?= TinyRocketArtyConfig
-	CONFIG_PACKAGE    ?= chipyard.fpga.arty
-	GENERATOR_PACKAGE ?= chipyard
-	TB                ?= none # unused
-	TOP               ?= ChipTop
-	BOARD             ?= arty
-	FPGA_BRAND        ?= xilinx
-endif
 ifeq ($(SUB_PROJECT),arty100t)
 	# TODO: Fix with Arty
 	SBT_PROJECT       ?= fpga_platforms
