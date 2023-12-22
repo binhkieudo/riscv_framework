@@ -1,4 +1,4 @@
-# riscv_framework
+# RISC-V Framework
 
 ## Instructions
 
