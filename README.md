@@ -45,7 +45,17 @@ In case that FireMarshal corrupt, install without FireMarshal
 ```shell
 ./build-setup.sh -s 9 riscv-tools
 ```
+
+## Active chipyard environment
+
+You have to active the chipyard environment whenever working with chipyard framework.
+
+```shell
+source env.sh
+```
+
 ## Build your first FPGA prototype (currently support Arty100T)
+
 
 Vivado must be in your PATH
 
