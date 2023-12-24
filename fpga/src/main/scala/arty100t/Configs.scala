@@ -8,15 +8,14 @@ import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.system._
 import freechips.rocketchip.tile._
-
 import sifive.blocks.devices.uart._
-import sifive.blocks.devices.gpio.{PeripheryGPIOKey, GPIOParams}
-import sifive.fpgashells.shell.{DesignKey}
+import sifive.blocks.devices.gpio.{GPIOParams, PeripheryGPIOKey}
+import sifive.fpgashells.shell.DesignKey
 
 import scala.sys.process._
-import testchipip.{SerialTLKey}
-
-import chipyard.{BuildSystem}
+import testchipip.SerialTLKey
+import chipyard.BuildSystem
+import sifive.blocks.devices.spi.{PeripherySPIKey, SPIParams}
 
 // don't use FPGAShell's DesignKey
 //class WithNoDesignKey extends Config((site, here, up) => {
@@ -36,12 +35,11 @@ class WithSystemModifications extends Config((site, here,up) => {
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
   case PeripheryGPIOKey => List(GPIOParams(address = BigInt(0x64002000L), width = 16))
+  case PeripherySPIKey => List(SPIParams(rAddress = BigInt(0x64003000L)))
 })
 
 class WithArty100TTweaks extends Config(
-//  new WithArty100TUARTTSI ++
 //  new WithArty100TDDRTL ++
-//  new WithNoDesignKey ++
   // clocking
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new chipyard.harness.WithHarnessBinderClockFreqMHz(50) ++
@@ -54,12 +52,13 @@ class WithArty100TTweaks extends Config(
   new WithArty100TDDR ++
   new WithArty100TUART ++
   new WithArty100TGPIO ++
-  new WithArty100JTAG ++
-  //  new chipyard.config.WithNoUART ++ // use UART for the UART-TSI thing instad
+  new WithArty100TJTAG ++
+  new WithArty100TSDCard ++
   // io binder
   new WithUARTIOPassthrough ++
   new WithGPIOIOPassthrough ++
   new WithTLIOPassthrough ++
+  new WithSPIIOPassthrough ++
   // other configuration
   new WithDefaultPeripherals ++
   new WithSystemModifications ++
@@ -73,22 +72,33 @@ class RocketArty100TConfig extends Config(
   new chipyard.config.WithBroadcastManager ++ // no l2
   new chipyard.RocketConfig)
 
-//class UART230400RocketArty100TConfig extends Config(
-//  new WithArty100TUARTTSI(uartBaudRate = 230400) ++
-//  new RocketArty100TConfig)
-//
-//class UART460800RocketArty100TConfig extends Config(
-//  new WithArty100TUARTTSI(uartBaudRate = 460800) ++
-//  new RocketArty100TConfig)
-//
-//class UART921600RocketArty100TConfig extends Config(
-//  new WithArty100TUARTTSI(uartBaudRate = 921600) ++
-//  new RocketArty100TConfig)
+class WithArty100TinyTweaks extends Config(
+  // clocking
+  new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
+  new chipyard.harness.WithHarnessBinderClockFreqMHz(50) ++
+  new chipyard.config.WithMemoryBusFrequency(50.0) ++
+  new chipyard.config.WithSystemBusFrequency(50.0) ++
+  new chipyard.config.WithPeripheryBusFrequency(50.0) ++
+  new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
+  new chipyard.clocking.WithPassthroughClockGenerator ++
+  // harness binder
+  new WithArty100TUART ++
+  new WithArty100TGPIO ++
+  new WithArty100TJTAG ++
+  new WithArty100TSDCard ++
+  // io binder
+  new WithUARTIOPassthrough ++
+  new WithGPIOIOPassthrough ++
+  new WithTLIOPassthrough ++
+  new WithSPIIOPassthrough ++
+  // other configuration
+  new WithDefaultPeripherals ++
+  new WithSystemModifications ++
+  new freechips.rocketchip.subsystem.WithoutTLMonitors ++
+  new chipyard.config.WithTLBackingMemory// FPGA-shells converts the AXI to TL for us
+)
 
-
-//class NoCoresArty100TConfig extends Config(
-//  new WithArty100TTweaks ++
-//  new chipyard.config.WithMemoryBusFrequency(50.0) ++
-//  new chipyard.config.WithPeripheryBusFrequency(50.0) ++  // Match the sbus and pbus frequency
-//  new chipyard.config.WithBroadcastManager ++ // no l2
-//  new chipyard.NoCoresConfig)
+class RocketTinyArty100TConfig extends Config(
+  new WithArty100TinyTweaks ++
+  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.TinyRocketConfig)

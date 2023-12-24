@@ -105,7 +105,11 @@ class GPIOArty100PlacedOverlay(val shell: Arty100TCustomShell,
     val gpioLocations = List("H5", "J5", "T9", "T10", "E1", "F6", "G6", "G4", "J4", "G3", "H4", "J2", "J3", "K2", "H6", "K1") //J3 pins 1-16
     val iosWithLocs = io.gpio.zip(gpioLocations)
     val packagePinsWithPackageIOs = iosWithLocs.map { case (io, pin) => (pin, IOPin(io)) }
-    println(packagePinsWithPackageIOs)
+    println("Placing GPIO...")
+    packagePinsWithPackageIOs foreach { case (pin, io) => {
+      println(s"$pin <-> $io")
+    }
+    }
 
     packagePinsWithPackageIOs foreach { case (pin, io) => {
       shell.xdc.addPackagePin(io, pin)
@@ -114,9 +118,65 @@ class GPIOArty100PlacedOverlay(val shell: Arty100TCustomShell,
     } }
   } }
 }
-class GPIOArty100ShellPlacer(val shell: Arty100TCustomShell, val shellInput: GPIOShellInput)(implicit val valName: ValName)
+class GPIOArty100ShellPlacer(val shell: Arty100TCustomShell,
+                             val shellInput: GPIOShellInput)(implicit val valName: ValName)
   extends GPIOShellPlacer[Arty100TCustomShell] {
   def place(designInput: GPIODesignInput) = new GPIOArty100PlacedOverlay(shell, valName.name, designInput, shellInput)
+}
+
+/* =============================================================
+==================== SDCard (PMOD-JB) ==========================
+===============================================================*/
+
+/* Digilent Pmod MicroSD <-> Arty PMOD-JB
+  Protocol: SDIO (https://en.wikipedia.org/wiki/SD_card#SDIO_cards)
+
+  PIN ArtyPIN Signal   Desc                  PIN ArtyPIN  Signal    Desc
+   1    E15    ~CS     Chip select/Data3      7    J17     DAT1     Data 1
+   2    E16    MOSI    MOSI/Command           8    J18     DAT2     Data 2
+   3    D15    MISO    MISO/Data0             9    K15     CD       Card Detect
+   4    C15    SCK     Serial Clock           10   J15     NC       Not Connected
+   5           GND     Ground                 11           GND      Ground
+   6           VCC     3.3V                   12           VCC      3.3V
+ */
+class SDCardArty100PlacedOverlay(val shell: Arty100TCustomShell,
+                                 name: String,
+                                 val designInput: SPIDesignInput,
+                                 val shellInput: SPIShellInput)
+  extends SDIOXilinxPlacedOverlay(name, designInput, shellInput)
+  {
+    shell { InModuleBody {
+      // Map SDIO pins with the physical FPGA pins
+      val packagePinsWithPackageIOs = Seq(
+        ("C15", IOPin(io.spi_clk)),
+        ("E16", IOPin(io.spi_cs)),
+        ("D15", IOPin(io.spi_dat(0))),
+        ("J17", IOPin(io.spi_dat(1))),
+        ("J18", IOPin(io.spi_dat(2))),
+        ("E15", IOPin(io.spi_dat(3)))
+      )
+      println("Placing SDIO...")
+      packagePinsWithPackageIOs foreach { case (pin, io) =>
+        println(s"$pin <-> $io")
+      }
+
+      packagePinsWithPackageIOs foreach { case (pin, io) => {
+       shell.xdc.addPackagePin(io, pin)
+       shell.xdc.addIOStandard(io, "LVCMOS33")
+       shell.xdc.addIOB(io)
+      }
+      }
+      packagePinsWithPackageIOs drop 1 foreach { case (pin, io) => {
+       shell.xdc.addPullup(io)
+      }
+      }
+    }
+    }
+  }
+class SDCardArty100ShellPlacer (val shell: Arty100TCustomShell,
+                                val shellInput: SPIShellInput)(implicit val valName: ValName)
+  extends SPIShellPlacer[Arty100TCustomShell] {
+  def place(designInput: SPIDesignInput) = new SDCardArty100PlacedOverlay(shell, valName.name, designInput, shellInput)
 }
 
 /* =============================================================
