@@ -1,0 +1,2 @@
+generators/chipyard/src/main/scala/config/fragments
+generators/rocket-chip/src/main/scala/system

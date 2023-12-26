@@ -107,4 +107,73 @@ class Arty100TTestHarnessImp(_outer: Arty100THarness) extends LazyRawModuleImp(_
   instantiateChipTops()
 }
 
+class Arty100TinyHarness(override implicit val p: Parameters) extends Arty100TCustomShell { outer =>
+  def dp = designParameters
 
+  /*** Clock ***/
+  val clockOverlay = dp(ClockInputOverlayKey).map(_.place(ClockInputDesignInput())).head
+  val harnessSysPLL = dp(PLLFactoryKey)
+  val harnessSysPLLNode = harnessSysPLL()
+  val dutFreqMHz = (dp(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toInt
+  val dutClock = ClockSinkNode(freqMHz = dutFreqMHz)
+  println(s"Arty100T FPGA Base Clock Freq: ${dutFreqMHz} MHz")
+  val dutWrangler = LazyModule(new ResetWrangler())
+  val dutGroup = ClockGroup()
+  dutClock := dutWrangler.node := dutGroup := harnessSysPLLNode
+
+  harnessSysPLLNode := clockOverlay.overlayOutput.node
+
+  /*** GPIO ***/
+  val io_gpio_bb = dp(PeripheryGPIOKey).map(p => BundleBridgeSource(() => (new GPIOPortIO(p))))
+  (dp(GPIOOverlayKey) zip dp(PeripheryGPIOKey)).zipWithIndex.map { case ((placer, params), i) =>
+    placer.place(GPIODesignInput(params, io_gpio_bb(i)))
+  }
+
+  /*** Debugger ***/
+  val jtagOverlay = dp(JTAGDebugOverlayKey).head.place(JTAGDebugDesignInput()).overlayOutput.jtag
+
+  /*** UART ***/
+  val io_uart_bb = BundleBridgeSource(() => new UARTPortIO(dp(PeripheryUARTKey).headOption.getOrElse(UARTParams(0))))
+  val uartOverlay = dp(UARTOverlayKey).head.place(UARTDesignInput(io_uart_bb))
+
+  /*** SDCard ***/
+  val io_sdcard_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).head))
+  val sdcardOverlay = dp(SPIOverlayKey).head.place(SPIDesignInput(dp(PeripherySPIKey).head, io_sdcard_bb))
+
+  override lazy val module = new Arty100TinyTestHarnessImp(_outer = this)
+}
+
+class Arty100TinyTestHarnessImp(_outer: Arty100TinyHarness) extends LazyRawModuleImp(_outer)
+  with HasHarnessInstantiators
+{
+  val athOuter = _outer
+
+  val reset = IO(Input(Bool()))
+  _outer.xdc.addBoardPin(reset, "reset")
+
+  val resetIBUF = Module(new IBUF)
+  resetIBUF.io.I := reset
+
+  val sysclk: Clock = _outer.sys_clock.get() match {
+    case Some(x: SysClockArty100PlacedOverlay) => x.clock
+  }
+  val powerOnReset = PowerOnResetFPGAOnly(sysclk)
+  _outer.sdc.addAsyncPath(Seq(powerOnReset))
+
+  _outer.resetPin := resetIBUF.io.O
+
+  _outer.clockOverlay.overlayOutput.node.out(0)._1.reset := ~_outer.resetPin
+
+
+  val clk_100mhz = _outer.clockOverlay.overlayOutput.node.out.head._1.clock
+
+  _outer.pllReset := (!resetIBUF.io.O) || powerOnReset
+  _outer.harnessSysPLL.plls.foreach(_._1.getReset.get := _outer.pllReset)
+
+  def referenceClockFreqMHz = _outer.dutFreqMHz
+  def referenceClock = _outer.dutClock.in.head._1.clock
+  def referenceReset = _outer.dutClock.in.head._1.reset
+  def success = { require(false, "Unused"); false.B }
+
+  instantiateChipTops()
+}

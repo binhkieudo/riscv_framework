@@ -8,12 +8,14 @@ import freechips.rocketchip.diplomacy.{AsynchronousCrossing}
 // --------------
 
 class RocketConfig extends Config(
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++         // single rocket-core
+//  new freechips.rocketchip.subsystem.WithNoMemPort ++
+  new freechips.rocketchip.subsystem.WithRV32++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core
   new chipyard.config.AbstractConfig)
 
 class TinyRocketConfig extends Config(
-  new chipyard.iobinders.WithDontTouchIOBinders(false) ++         // TODO FIX: Don't dontTouch the ports
-  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
+//  new chipyard.iobinders.WithDontTouchIOBinders(false) ++         // TODO FIX: Don't dontTouch the ports
+//  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
   new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
   new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
@@ -43,6 +45,7 @@ class Cloned64RocketConfig extends Config(
 
 class RV32RocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithRV32 ++            // set RocketTiles to be 32-bit
+//  new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNBigCores(1) ++
   new chipyard.config.AbstractConfig)
 
