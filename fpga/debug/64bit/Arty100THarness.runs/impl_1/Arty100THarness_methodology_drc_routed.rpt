@@ -1,0 +1,573 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
+| Date         : Fri Jan  5 01:12:38 2024
+| Host         : binhkieudo-ASUS running 64-bit Ubuntu 20.04.6 LTS
+| Command      : report_methodology -file Arty100THarness_methodology_drc_routed.rpt -pb Arty100THarness_methodology_drc_routed.pb -rpx Arty100THarness_methodology_drc_routed.rpx
+| Design       : Arty100THarness
+| Device       : xc7a100tcsg324-1
+| Speed File   : -1
+| Design State : Fully Routed
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report Methodology
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+             Max violations: <unlimited>
+             Violations found: 93
++-----------+------------------+-------------------------------------------------------------------------------------------------------+------------+
+| Rule      | Severity         | Description                                                                                           | Violations |
++-----------+------------------+-------------------------------------------------------------------------------------------------------+------------+
+| TIMING-14 | Critical Warning | LUT on the clock tree                                                                                 | 1          |
+| CKLD-2    | Warning          | Clock Net has IO Driver, not a Clock Buf, and/or non-Clock loads                                      | 1          |
+| HPDR-1    | Warning          | Port pin direction inconsistency                                                                      | 5          |
+| LUTAR-1   | Warning          | LUT drives async reset alert                                                                          | 5          |
+| PDRC-190  | Warning          | Suboptimally placed synchronized register chain                                                       | 22         |
+| SYNTH-10  | Warning          | Wide multiplier                                                                                       | 10         |
+| SYNTH-16  | Warning          | Address collision                                                                                     | 24         |
+| TIMING-9  | Warning          | Unknown CDC Logic                                                                                     | 1          |
+| TIMING-10 | Warning          | Missing property on synchronizer                                                                      | 1          |
+| TIMING-24 | Warning          | Overridden Max delay datapath only                                                                    | 1          |
+| TIMING-47 | Warning          | False path, asynchronous clock group or max delay datapath only constraint between synchronous clocks | 4          |
+| XDCB-5    | Warning          | Runtime inefficient way to find pin objects                                                           | 1          |
+| LATCH-1   | Advisory         | Existing latches in the design                                                                        | 1          |
+| REQP-1959 | Advisory         | connects_SERDES_RST_driver_not_FF                                                                     | 16         |
++-----------+------------------+-------------------------------------------------------------------------------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+TIMING-14#1 Critical Warning
+LUT on the clock tree  
+The LUT chiptop0/gated_clock_debug_clock_gate/COMMANDRdData_cmdtype[7]_i_8 has been found on the clock tree. Run opt_design to optimize the clock trees, then re-run report_methodology. If LUT(s) are still present in the clock trees, modify the RTL or the synthesis options accordingly to move the clock gating logic to dedicated clock enable resources. Keep in mind that post-opt_design database cannot be used for pin-planning tasks
+Related violations: <none>
+
+CKLD-2#1 Warning
+Clock Net has IO Driver, not a Clock Buf, and/or non-Clock loads  
+Clock net _sys_clock_ibufg_O is directly driven by an IO rather than a Clock Buffer or may be an IO driving a mix of Clock Buffer and non-Clock loads. This connectivity should be reviewed and corrected as appropriate. Driver(s): fpga_power_on/clock, harnessSysPLLNode/clk_in1, sys_clock_ibufg/O
+Related violations: <none>
+
+HPDR-1#1 Warning
+Port pin direction inconsistency  
+Hierarchical port(pin) jtag_jtag_TDO direction INOUT is not consistent with the directions of the cell pins/ports found at that level of the netlist hierarchy. Please review the design and consider changing the port(pin) direction. Both drivers and loads were expected for the net (jtag_jtag_TDO) connected to this Port, but both were not found.
+Related violations: <none>
+
+HPDR-1#2 Warning
+Port pin direction inconsistency  
+Hierarchical port(pin) sdcard_spi_clk direction INOUT is not consistent with the directions of the cell pins/ports found at that level of the netlist hierarchy. Please review the design and consider changing the port(pin) direction. Both drivers and loads were expected for the net (sdcard_spi_clk) connected to this Port, but both were not found.
+Related violations: <none>
+
+HPDR-1#3 Warning
+Port pin direction inconsistency  
+Hierarchical port(pin) sdcard_spi_cs direction INOUT is not consistent with the directions of the cell pins/ports found at that level of the netlist hierarchy. Please review the design and consider changing the port(pin) direction. Both drivers and loads were expected for the net (sdcard_spi_cs) connected to this Port, but both were not found.
+Related violations: <none>
+
+HPDR-1#4 Warning
+Port pin direction inconsistency  
+Hierarchical port(pin) sdcard_spi_dat_3 direction INOUT is not consistent with the directions of the cell pins/ports found at that level of the netlist hierarchy. Please review the design and consider changing the port(pin) direction. Both drivers and loads were expected for the net (sdcard_spi_dat_3) connected to this Port, but both were not found.
+Related violations: <none>
+
+HPDR-1#5 Warning
+Port pin direction inconsistency  
+Hierarchical port(pin) uart_txd direction INOUT is not consistent with the directions of the cell pins/ports found at that level of the netlist hierarchy. Please review the design and consider changing the port(pin) direction. Both drivers and loads were expected for the net (uart_txd) connected to this Port, but both were not found.
+Related violations: <none>
+
+LUTAR-1#1 Warning
+LUT drives async reset alert  
+LUT cell harnessBinderReset_catcher/io_sync_reset_chain/output_chain/sync_2_i_1__2, with 2 or more inputs, drives asynchronous preset/clear pin(s) mig/axi4asource/x1_ar_source/sink_extend/io_out_sink_valid_0/output_chain/sync_0_reg/CLR,
+mig/axi4asource/x1_ar_source/sink_extend/io_out_sink_valid_0/output_chain/sync_1_reg/CLR,
+mig/axi4asource/x1_ar_source/sink_extend/io_out_sink_valid_0/output_chain/sync_2_reg/CLR,
+mig/axi4asource/x1_aw_source/source_valid_0/io_out_sink_valid_0/output_chain/sync_0_reg/CLR,
+mig/axi4asource/x1_aw_source/source_valid_0/io_out_sink_valid_0/output_chain/sync_1_reg/CLR,
+mig/axi4asource/x1_aw_source/source_valid_0/io_out_sink_valid_0/output_chain/sync_2_reg/CLR,
+mig/axi4asource/x1_aw_source/source_valid_1/io_out_sink_valid_0/output_chain/sync_0_reg/CLR,
+mig/axi4asource/x1_aw_source/source_valid_1/io_out_sink_valid_0/output_chain/sync_1_reg/CLR
+mig/axi4asource/x1_aw_source/source_valid_1/io_out_sink_valid_0/output_chain/sync_2_reg/CLR. The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+LUTAR-1#2 Warning
+LUT drives async reset alert  
+LUT cell mig/island/axi4asink/i_/i_, with 2 or more inputs, drives asynchronous preset/clear pin(s) mig/island/axi4asink/x1_aw_sink/sink_valid_0/io_out_sink_valid_0/output_chain/sync_0_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/sink_valid_0/io_out_sink_valid_0/output_chain/sync_1_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/sink_valid_0/io_out_sink_valid_0/output_chain/sync_2_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/sink_valid_1/io_out_sink_valid_0/output_chain/sync_0_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/sink_valid_1/io_out_sink_valid_0/output_chain/sync_1_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/sink_valid_1/io_out_sink_valid_0/output_chain/sync_2_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/source_extend/io_out_sink_valid_0/output_chain/sync_0_reg/CLR,
+mig/island/axi4asink/x1_aw_sink/source_extend/io_out_sink_valid_0/output_chain/sync_1_reg/CLR
+mig/island/axi4asink/x1_aw_sink/source_extend/io_out_sink_valid_0/output_chain/sync_2_reg/CLR. The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+LUTAR-1#3 Warning
+LUT drives async reset alert  
+LUT cell mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rstdiv2_sync_r[11]_i_1, with 2 or more inputs, drives asynchronous preset/clear pin(s) mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r1_reg_rep__7/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r1_reg_rep__8/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r1_reg_rep__9/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[0]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[10]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[11]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[1]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[2]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[3]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[4]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[5]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[6]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[7]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[8]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_ddr3_infrastructure/rstdiv0_sync_r_reg[9]/PRE
+ (the first 15 of 33 listed). The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+LUTAR-1#4 Warning
+LUT drives async reset alert  
+LUT cell mig/island/blackbox_i_6, with 2 or more inputs, drives asynchronous preset/clear pin(s) harnessSysPLLNode/inst/mmcm_adv_inst/RST,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][10]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][11]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][12]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][13]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][14]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][1]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][2]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][3]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][4]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][5]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][6]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][7]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][8]/PRE,
+mig/island/blackbox/u_arty100tmig_mig/u_iodelay_ctrl/rst_ref_sync_r_reg[0][9]/PRE
+ (the first 15 of 16 listed). The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+LUTAR-1#5 Warning
+LUT drives async reset alert  
+LUT cell mig/island/reg_0_i_2__1, with 2 or more inputs, drives asynchronous preset/clear pin(s) dutWrangler/debounced_debounce/reg_0_reg[0]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[10]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[11]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[12]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[1]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[2]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[3]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[4]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[5]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[6]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[7]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[8]/CLR,
+dutWrangler/debounced_debounce/reg_0_reg[9]/CLR
+dutWrangler/deglitched_deglitch/reg_0_reg/PRE. The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
+Related violations: <none>
+
+PDRC-190#1 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_reg[0] in site SLICE_X10Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_1_reg[0] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#2 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_reg[1] in site SLICE_X9Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_1_reg[1] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#3 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_reg[2] in site SLICE_X8Y65 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_1_reg[2] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#4 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_reg[3] in site SLICE_X8Y67 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD2/stat_reg_1_reg[3] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#5 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD3/stat_reg_reg[0] in site SLICE_X5Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD3/stat_reg_1_reg[0] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#6 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD3/stat_reg_reg[1] in site SLICE_X4Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD3/stat_reg_1_reg[1] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#7 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD3/stat_reg_reg[2] in site SLICE_X6Y66 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD3/stat_reg_1_reg[2] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#8 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_STAT/stat_reg_reg[0] in site SLICE_X11Y68 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_STAT/stat_reg_1_reg[0] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#9 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_STAT/stat_reg_reg[1] in site SLICE_X10Y68 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_STAT/stat_reg_1_reg[1] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#10 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_STAT/stat_reg_reg[2] in site SLICE_X12Y68 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell dbg_hub/inst/BSCANID.u_xsdbm_id/CORE_XSDB.UUT_MASTER/U_ICON_INTERFACE/U_CMD7_STAT/stat_reg_1_reg[2] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#11 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[0] in site SLICE_X32Y122 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[0] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#12 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[10] in site SLICE_X33Y122 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[10] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#13 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[11] in site SLICE_X34Y125 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[11] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#14 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[1] in site SLICE_X35Y124 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[1] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#15 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[2] in site SLICE_X33Y124 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[2] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#16 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[3] in site SLICE_X33Y126 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[3] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#17 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[4] in site SLICE_X31Y124 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[4] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#18 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[5] in site SLICE_X32Y125 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[5] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#19 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[6] in site SLICE_X34Y123 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[6] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#20 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[7] in site SLICE_X30Y124 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[7] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#21 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[8] in site SLICE_X29Y124 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[8] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+PDRC-190#22 Warning
+Suboptimally placed synchronized register chain  
+The FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_sync_r5_reg[9] in site SLICE_X31Y126 is part of a synchronized register chain that is suboptimally placed as the load FDRE cell mig/island/blackbox/u_arty100tmig_mig/temp_mon_enabled.u_tempmon/device_temp_r_reg[9] is not placed in the same (SLICE) site.
+Related violations: <none>
+
+SYNTH-10#1 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#2 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__0 of size 16x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#3 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__1 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#4 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__2 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#5 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__3 of size 18x16, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#6 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__4 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#7 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__5 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#8 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__6 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#9 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__7 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-10#10 Warning
+Wide multiplier  
+Detected multiplier at chiptop0/system/tile_prci_domain/tile_reset_domain_tile/core/div/_GEN0__8 of size 18x18, it is decomposed from a wide multipler into 16 DSP blocks.
+Related violations: <none>
+
+SYNTH-16#1 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_0/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#2 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_1/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#3 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_10/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#4 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_11/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#5 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_12/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#6 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_13/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#7 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_14/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#8 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_15/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#9 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_2/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#10 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_3/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#11 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_4/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#12 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_5/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#13 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_6/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#14 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_7/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#15 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_8/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#16 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/data/data_arrays_0/data_arrays_0_ext/mem_0_9/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#17 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/tag_array/tag_array_ext/mem_0_0/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#18 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/dcache/tag_array/tag_array_ext/mem_0_1/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#19 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/data_arrays_0/data_arrays_0_0_ext/mem_0_0/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#20 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/data_arrays_0/data_arrays_0_0_ext/mem_0_1/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#21 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/data_arrays_1/data_arrays_0_0_ext/mem_0_0/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#22 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/data_arrays_1/data_arrays_0_0_ext/mem_0_1/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#23 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/tag_array/tag_array_0_ext/mem_0_0/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+SYNTH-16#24 Warning
+Address collision  
+Block RAM chiptop0/system/tile_prci_domain/tile_reset_domain_tile/frontend/icache/tag_array/tag_array_0_ext/mem_0_1/ram_reg may get memory collision error if read and write address collide. Use of address collision resolution circuitry is recommended.
+Related violations: <none>
+
+TIMING-9#1 Warning
+Unknown CDC Logic  
+One or more asynchronous Clock Domain Crossing has been detected between 2 clock domains through a set_false_path or a set_clock_groups or set_max_delay -datapath_only constraint but no double-registers logic synchronizer has been found on the side of the capture clock. It is recommended to run report_cdc for a complete and detailed CDC coverage. Please consider using XPM_CDC to avoid Critical severities
+Related violations: <none>
+
+TIMING-10#1 Warning
+Missing property on synchronizer  
+One or more logic synchronizer has been detected between 2 clock domains but the synchronizer does not have the property ASYNC_REG defined on one or both registers. It is recommended to run report_cdc for a complete and detailed CDC coverage
+Related violations: <none>
+
+TIMING-24#1 Warning
+Overridden Max delay datapath only  
+An asynchronous set_clock_groups or a set_false path (see constraint position 68 in the Timing Constraints window in Vivado IDE) between clocks clk_pll_i and clk_out3_harnessSysPLLNode overrides a set_max_delay -datapath_only (position 9). It is not recommended to override a set_max_delay -datapath_only constraint. Replace the set_clock_groups or set_false_path between clocks with point-to-point set_false_path constraints
+Related violations: <none>
+
+TIMING-47#1 Warning
+False path, asynchronous clock group or max delay datapath only constraint between synchronous clocks  
+A Clock Group timing constraint is set between synchronous clocks clk_out1_harnessSysPLLNode and clk_pll_i (see constraint position 68 in the Timing Constraint window in Vivado IDE). Masking entire synchronous clock domains via  set_false_path, set_clock_groups or set_max_delay -datapath_only may result in failure in hardware.
+Related violations: <none>
+
+TIMING-47#2 Warning
+False path, asynchronous clock group or max delay datapath only constraint between synchronous clocks  
+A Clock Group timing constraint is set between synchronous clocks clk_out3_harnessSysPLLNode and clk_pll_i (see constraint position 68 in the Timing Constraint window in Vivado IDE). Masking entire synchronous clock domains via  set_false_path, set_clock_groups or set_max_delay -datapath_only may result in failure in hardware.
+Related violations: <none>
+
+TIMING-47#3 Warning
+False path, asynchronous clock group or max delay datapath only constraint between synchronous clocks  
+A Clock Group timing constraint is set between synchronous clocks clk_pll_i and clk_out1_harnessSysPLLNode (see constraint position 68 in the Timing Constraint window in Vivado IDE). Masking entire synchronous clock domains via  set_false_path, set_clock_groups or set_max_delay -datapath_only may result in failure in hardware.
+Related violations: <none>
+
+TIMING-47#4 Warning
+False path, asynchronous clock group or max delay datapath only constraint between synchronous clocks  
+A Clock Group timing constraint is set between synchronous clocks clk_pll_i and clk_out3_harnessSysPLLNode (see constraint position 68 in the Timing Constraint window in Vivado IDE). Masking entire synchronous clock domains via  set_false_path, set_clock_groups or set_max_delay -datapath_only may result in failure in hardware.
+Related violations: <none>
+
+XDCB-5#1 Warning
+Runtime inefficient way to find pin objects  
+The option '-to : [get_pins -hier -include_replicated_objects -filter {NAME =~ *temp_mon_enabled.u_tempmon/device_temp_sync_r1_reg[*]/D}]' of constraint 'set_max_delay' uses inefficient query to find pin objects (see constraint position '6' in the Timing Constraint window in Vivado IDE). To reduce runtime, it is recommended to get the pins through the cell objects. Please refer to Using Constraints Guide (Constraints Efficiency). An example of optimal query is: get_pins -filter {REF_PIN_NAME=~yy*} -of_objects [get_cells -hierarchical xx*].
+Current XDC: /home/binhkieudo/Workspace/riscv_framework/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.RocketArty100TConfig/obj/ip/arty100tmig/arty100tmig/user_design/constraints/arty100tmig.xdc (Line: 356)
+Related violations: <none>
+
+LATCH-1#1 Advisory
+Existing latches in the design  
+There are 1 latches found in the design. Inferred latches are often the result of HDL coding mistakes, such as incomplete if or case statements.
+Related violations: <none>
+
+REQP-1959#1 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[1].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#2 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[2].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#3 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[3].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#4 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[4].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#5 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[5].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#6 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[6].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#7 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[7].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#8 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_C.ddr_byte_lane_C/ddr_byte_group_io/input_[8].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#9 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[1].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#10 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[2].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#11 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[3].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#12 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[4].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#13 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[5].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#14 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[6].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#15 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[7].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+REQP-1959#16 Advisory
+connects_SERDES_RST_driver_not_FF  
+mig/island/blackbox/u_arty100tmig_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/u_ddr_mc_phy/ddr_phy_4lanes_0.u_ddr_phy_4lanes/ddr_byte_lane_D.ddr_byte_lane_D/ddr_byte_group_io/input_[8].iserdes_dq_.iserdesdq: The RST pin should only be driven by a Flip-flop.
+Related violations: <none>
+
+

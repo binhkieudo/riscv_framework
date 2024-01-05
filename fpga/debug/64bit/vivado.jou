@@ -1,0 +1,61 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 04:59:54 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Fri Jan  5 01:39:08 2024
+# Process ID: 202478
+# Current directory: /home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit
+# Command line: vivado Arty100THarness.xpr
+# Log file: /home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/vivado.log
+# Journal file: /home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/vivado.jou
+# Running On: binhkieudo-ASUS, OS: Linux, CPU Frequency: 1400.000 MHz, CPU Physical cores: 16, Host memory: 33036 MB
+#-----------------------------------------------------------
+start_gui
+open_project Arty100THarness.xpr
+update_compile_order -fileset sources_1
+open_hw_manager
+connect_hw_server -allow_non_jtag
+open_hw_target
+set_property PROGRAM.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.bit} [get_hw_devices xc7a100t_0]
+set_property PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property FULL_PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+current_hw_device [get_hw_devices xc7a100t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a100t_0] 0]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_1 -of_objects [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]]
+set_property PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property FULL_PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property PROGRAM.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.bit} [get_hw_devices xc7a100t_0]
+program_hw_devices [get_hw_devices xc7a100t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a100t_0] 0]
+run_hw_ila [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]
+wait_on_hw_ila [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]
+display_hw_ila_data [upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]]
+run_hw_ila [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]
+wait_on_hw_ila -timeout 0 [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]
+upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]
+save_wave_config {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.hw/hw_1/wave/hw_ila_data_1/hw_ila_data_1.wcfg}
+disconnect_hw_server localhost:3121
+connect_hw_server -allow_non_jtag
+open_hw_target
+set_property PROGRAM.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.bit} [get_hw_devices xc7a100t_0]
+set_property PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property FULL_PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+current_hw_device [get_hw_devices xc7a100t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a100t_0] 0]
+disconnect_hw_server localhost:3121
+connect_hw_server -allow_non_jtag
+open_hw_target
+set_property PROGRAM.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.bit} [get_hw_devices xc7a100t_0]
+set_property PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property FULL_PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+current_hw_device [get_hw_devices xc7a100t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a100t_0] 0]
+set_property PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property FULL_PROBES.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.ltx} [get_hw_devices xc7a100t_0]
+set_property PROGRAM.FILE {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.runs/impl_1/Arty100THarness.bit} [get_hw_devices xc7a100t_0]
+program_hw_devices [get_hw_devices xc7a100t_0]
+refresh_hw_device [lindex [get_hw_devices xc7a100t_0] 0]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_1 -of_objects [get_hw_ilas -of_objects [get_hw_devices xc7a100t_0] -filter {CELL_NAME=~"chiptop0/system/uartClockDomainWrapper/uart_0/ila_0"}]]
+save_wave_config {/home/binhkieudo/Workspace/riscv_framework/fpga/debug/64bit/Arty100THarness.hw/hw_1/wave/hw_ila_data_1/hw_ila_data_1.wcfg}
+disconnect_hw_server localhost:3121
+close_hw_manager

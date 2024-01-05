@@ -140,6 +140,15 @@ class Arty100TinyHarness(override implicit val p: Parameters) extends Arty100TCu
   val io_sdcard_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).head))
   val sdcardOverlay = dp(SPIOverlayKey).head.place(SPIDesignInput(dp(PeripherySPIKey).head, io_sdcard_bb))
 
+  /*** DDR ***/
+  val ddrOverlay = dp(DDROverlayKey).head.place(DDRDesignInput(dp(ExtTLMem).get.master.base, dutWrangler.node, harnessSysPLLNode)).asInstanceOf[DDRArty100PlacedOverlay]
+  val ddrClient = TLClientNode(Seq(TLMasterPortParameters.v1(Seq(TLMasterParameters.v1(
+    name = "chip_ddr",
+    sourceId = IdRange(0, 1 << dp(ExtTLMem).get.master.idBits)
+  )))))
+  val ddrBlockDuringReset = LazyModule(new TLBlockDuringReset(4))
+  ddrOverlay.overlayOutput.ddr := ddrBlockDuringReset.node := ddrClient
+
   override lazy val module = new Arty100TinyTestHarnessImp(_outer = this)
 }
 
@@ -174,6 +183,11 @@ class Arty100TinyTestHarnessImp(_outer: Arty100TinyHarness) extends LazyRawModul
   def referenceClock = _outer.dutClock.in.head._1.clock
   def referenceReset = _outer.dutClock.in.head._1.reset
   def success = { require(false, "Unused"); false.B }
+
+  _outer.ddrOverlay.mig.module.clock := harnessBinderClock
+  _outer.ddrOverlay.mig.module.reset := harnessBinderReset
+  _outer.ddrBlockDuringReset.module.clock := harnessBinderClock
+  _outer.ddrBlockDuringReset.module.reset := harnessBinderReset.asBool || !_outer.ddrOverlay.mig.module.io.port.init_calib_complete
 
   instantiateChipTops()
 }

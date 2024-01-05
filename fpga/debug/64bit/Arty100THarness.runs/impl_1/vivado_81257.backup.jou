@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 04:59:54 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Fri Jan  5 00:43:57 2024
+# Process ID: 81257
+# Current directory: /home/binhkieudo/Workspace/riscv_framework/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.RocketArty100TConfig/Arty100THarness.runs/impl_1
+# Command line: vivado -log Arty100THarness.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source Arty100THarness.tcl -notrace
+# Log file: /home/binhkieudo/Workspace/riscv_framework/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.RocketArty100TConfig/Arty100THarness.runs/impl_1/Arty100THarness.vdi
+# Journal file: /home/binhkieudo/Workspace/riscv_framework/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.RocketArty100TConfig/Arty100THarness.runs/impl_1/vivado.jou
+# Running On: binhkieudo-ASUS, OS: Linux, CPU Frequency: 1400.000 MHz, CPU Physical cores: 16, Host memory: 33036 MB
+#-----------------------------------------------------------
+source Arty100THarness.tcl -notrace

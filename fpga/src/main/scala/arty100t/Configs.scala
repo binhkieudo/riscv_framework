@@ -23,15 +23,15 @@ import sifive.blocks.devices.spi.{PeripherySPIKey, SPIParams}
 //})
 class WithSystemModifications extends Config((site, here,up) => {
   case DTSTimebase => BigInt((1e6).toLong)
-//  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
-  //    val freqMHz = (site(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toLong
-  //    val make = s"make -C fpga/src/main/resources/arty100T/sdboot PBUS_CLK=${freqMHz} bin"
-  //    require (make.! == 0, "Failed to build bootrom")
-  //    p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
-  //  }
+  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
+      val freqMHz = (site(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toLong
+      val make = s"make -C fpga/src/main/resources/arty100T/sdboot PBUS_CLK=${freqMHz} bin"
+      require (make.! == 0, "Failed to build bootrom")
+      p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
+    }
   case ExtTLMem => Some(MemoryPortParams(MasterPortParams(
-    base = x"4000_0000",
-    size = x"0400_0000",
+    base = x"8000_0000",
+    size = x"1000_0000",
     beatBytes = site(MemoryBusKey).beatBytes,
     idBits = 4), 1))
   case SerialTLKey => None // remove serialized tl port
@@ -86,6 +86,7 @@ class WithArty100TinyTweaks extends Config(
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new chipyard.clocking.WithPassthroughClockGenerator ++
   // harness binder
+  new WithArty100TDDR ++
   new WithArty100TUART ++
   new WithArty100TGPIO ++
   new WithArty100TJTAG ++
@@ -98,10 +99,11 @@ class WithArty100TinyTweaks extends Config(
   // other configuration
   new WithDefaultPeripherals ++
   new WithSystemModifications ++
+  new chipyard.config.WithTLBackingMemory ++ // FPGA-shells converts the AXI to TL for us
   new freechips.rocketchip.subsystem.WithoutTLMonitors
 )
 
 class RocketTinyArty100TConfig extends Config(
   new WithArty100TinyTweaks ++
   new chipyard.config.WithBroadcastManager ++ // no l2
-  new chipyard.TinyRocketConfig)
+  new chipyard.SmallRocketConfig)

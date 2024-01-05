@@ -14,7 +14,7 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= arty100t
+SUB_PROJECT ?= arty100tTiny
 
 ifeq ($(SUB_PROJECT),arty100t)
 	# TODO: Fix with Arty
@@ -124,3 +124,4 @@ debug-bitstream: $(build_dir)/obj/post_synth.dcp
 .PHONY: clean
 clean:
 	rm -rf $(gen_dir)
+	rm vivado*

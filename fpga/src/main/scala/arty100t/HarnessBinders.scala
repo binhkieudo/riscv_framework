@@ -84,7 +84,16 @@ class WithArty100TDDR extends OverrideHarnessBinder({
           val ddrClientBundle = Wire(new HeterogeneousBag(bundles.map(_.cloneType)))
           bundles.zip(ddrClientBundle).foreach { case (bundle, io) => bundle <> io }
           ddrClientBundle <> ports.head
-      }}
+        }
+        case ath: Arty100TinyTestHarnessImp => {
+          require(ports.size == 1)
+
+          val bundles = ath.athOuter.ddrClient.out.map(_._1)
+          val ddrClientBundle = Wire(new HeterogeneousBag(bundles.map(_.cloneType)))
+          bundles.zip(ddrClientBundle).foreach { case (bundle, io) => bundle <> io }
+          ddrClientBundle <> ports.head
+        }
+    }
   }
 })
 

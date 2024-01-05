@@ -1,0 +1,14 @@
+[
+	{
+		"class":"sifive.enterprise.firrtl.MarkDUTAnnotation",
+		"target":"~Arty100THarness|ChipTop"
+	},
+	{
+		"class": "sifive.enterprise.firrtl.TestHarnessHierarchyAnnotation",
+		"filename": "/home/binhkieudo/Workspace/riscv_framework/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.RocketArty100TConfig/model_module_hierarchy.json"
+	},
+	{
+		"class": "sifive.enterprise.firrtl.ModuleHierarchyAnnotation",
+		"filename": "/home/binhkieudo/Workspace/riscv_framework/fpga/generated-src/chipyard.fpga.arty100t.Arty100THarness.RocketArty100TConfig/top_module_hierarchy.json"
+	}
+]
