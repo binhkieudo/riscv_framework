@@ -5,7 +5,6 @@
 
 #include "common.h"
 
-#define DEBUG
 #include "kprintf.h"
 
 int main(void)
