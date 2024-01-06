@@ -1,7 +1,8 @@
 package chipyard
 
-import org.chipsalliance.cde.config.{Config}
-import freechips.rocketchip.diplomacy.{AsynchronousCrossing}
+import org.chipsalliance.cde.config.Config
+import freechips.rocketchip.diplomacy.AsynchronousCrossing
+import freechips.rocketchip.subsystem.{InSubsystem, RocketTileAttachParams, TilesLocated}
 
 // --------------
 // Rocket Configs
@@ -22,11 +23,26 @@ class TinyRocketConfig extends Config(
 
 class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
-//  new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
-//  new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
-  new freechips.rocketchip.subsystem.With1SmallCore ++             // single tiny rocket-core
+  new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
+  new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
+  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
+
+class SmallRocketMemConfig extends Config(
+  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
+  new WithL1DScratchAddressSets(address = 0x40000000L) ++
+  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
+  new chipyard.config.AbstractConfig
+)
+
+class WithL1DScratchAddressSets(address: BigInt = 0x80000000L) extends Config((site, here, up) => {
+  case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
+    case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      dcache = tp.tileParams.dcache.map(_.copy(scratch = Some(address)))))
+    case t => t
+  }
+})
 
 class UARTTSIRocketConfig extends Config(
   new chipyard.harness.WithUARTSerial ++

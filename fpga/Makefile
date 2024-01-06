@@ -14,7 +14,7 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= arty100tTiny
+SUB_PROJECT ?= arty100tTinyMem
 
 ifeq ($(SUB_PROJECT),arty100t)
 	# TODO: Fix with Arty
@@ -23,6 +23,21 @@ ifeq ($(SUB_PROJECT),arty100t)
 	VLOG_MODEL        ?= Arty100THarness
 	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
 	CONFIG            ?= RocketArty100TConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
+
+ifeq ($(SUB_PROJECT),arty100tTinyMem)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketTinyMemArty100TConfig
 	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
 	GENERATOR_PACKAGE ?= chipyard
 	TB                ?= none # unused
@@ -45,6 +60,8 @@ ifeq ($(SUB_PROJECT),arty100tTiny)
 	BOARD             ?= arty_a7_100
 	FPGA_BRAND        ?= xilinx
 endif
+
+
 
 include $(base_dir)/variables.mk
 
@@ -124,4 +141,4 @@ debug-bitstream: $(build_dir)/obj/post_synth.dcp
 .PHONY: clean
 clean:
 	rm -rf $(gen_dir)
-	rm vivado*
+	rm -f vivado*

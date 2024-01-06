@@ -29,6 +29,9 @@ class WithArty100TSDCard extends OverrideHarnessBinder({
       case ath: Arty100TinyTestHarnessImp => {
         ath.athOuter.io_sdcard_bb.bundle <> ports.head
       }
+      case ath: Arty100TinyWithMemTestHarnessImp => {
+        ath.athOuter.io_sdcard_bb.bundle <> ports.head
+      }
     }
   }
 })
@@ -40,6 +43,9 @@ class WithArty100TUART extends OverrideHarnessBinder({
         ath.athOuter.io_uart_bb.bundle <> ports.head
       }
       case ath: Arty100TinyTestHarnessImp => {
+        ath.athOuter.io_uart_bb.bundle <> ports.head
+      }
+      case ath: Arty100TinyWithMemTestHarnessImp => {
         ath.athOuter.io_uart_bb.bundle <> ports.head
       }
     }
@@ -71,6 +77,17 @@ class WithArty100TJTAG extends OverrideHarnessBinder({
             j.TDI := jtagModule.TDI
         }
       }
+      case ath: Arty100TinyWithMemTestHarnessImp => {
+        ports.map {
+          case j: JTAGChipIO =>
+            val jtagModule = ath.athOuter.jtagOverlay
+            jtagModule.TDO.data := j.TDO
+            jtagModule.TDO.driven := true.B
+            j.TCK := jtagModule.TCK
+            j.TMS := jtagModule.TMS
+            j.TDI := jtagModule.TDI
+        }
+      }
     }
   }})
 
@@ -85,7 +102,7 @@ class WithArty100TDDR extends OverrideHarnessBinder({
           bundles.zip(ddrClientBundle).foreach { case (bundle, io) => bundle <> io }
           ddrClientBundle <> ports.head
         }
-        case ath: Arty100TinyTestHarnessImp => {
+        case ath: Arty100TinyWithMemTestHarnessImp => {
           require(ports.size == 1)
 
           val bundles = ath.athOuter.ddrClient.out.map(_._1)
@@ -106,6 +123,11 @@ class WithArty100TGPIO extends OverrideHarnessBinder({
         }
       }
       case ath: Arty100TinyTestHarnessImp => {
+        (ath.athOuter.io_gpio_bb zip ports).map{ case (gpio, port) =>
+          gpio.bundle <> port
+        }
+      }
+      case ath: Arty100TinyWithMemTestHarnessImp => {
         (ath.athOuter.io_gpio_bb zip ports).map{ case (gpio, port) =>
           gpio.bundle <> port
         }

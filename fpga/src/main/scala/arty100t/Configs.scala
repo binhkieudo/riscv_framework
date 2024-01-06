@@ -37,6 +37,17 @@ class WithSystemModifications extends Config((site, here,up) => {
   case SerialTLKey => None // remove serialized tl port
 })
 
+class WithTinySystemModifications extends Config((site, here,up) => {
+  case DTSTimebase => BigInt((1e6).toLong)
+  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
+    val freqMHz = (site(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toLong
+    val make = s"make -C fpga/src/main/resources/arty100T/sdboot PBUS_CLK=${freqMHz} bin"
+    require (make.! == 0, "Failed to build bootrom")
+    p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
+  }
+  case SerialTLKey => None // remove serialized tl port
+})
+
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
   case PeripheryGPIOKey => List(GPIOParams(address = BigInt(0x64002000L), width = 16))
@@ -44,7 +55,6 @@ class WithDefaultPeripherals extends Config((site, here, up) => {
 })
 
 class WithArty100TTweaks extends Config(
-//  new WithArty100TDDRTL ++
   // clocking
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new chipyard.harness.WithHarnessBinderClockFreqMHz(50) ++
@@ -86,7 +96,6 @@ class WithArty100TinyTweaks extends Config(
   new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
   new chipyard.clocking.WithPassthroughClockGenerator ++
   // harness binder
-  new WithArty100TDDR ++
   new WithArty100TUART ++
   new WithArty100TGPIO ++
   new WithArty100TJTAG ++
@@ -98,12 +107,15 @@ class WithArty100TinyTweaks extends Config(
   new WithSPIIOPassthrough ++
   // other configuration
   new WithDefaultPeripherals ++
-  new WithSystemModifications ++
-  new chipyard.config.WithTLBackingMemory ++ // FPGA-shells converts the AXI to TL for us
+  new WithTinySystemModifications ++
   new freechips.rocketchip.subsystem.WithoutTLMonitors
 )
 
 class RocketTinyArty100TConfig extends Config(
   new WithArty100TinyTweaks ++
-  new chipyard.config.WithBroadcastManager ++ // no l2
   new chipyard.SmallRocketConfig)
+
+class RocketTinyMemArty100TConfig extends Config(
+  new WithArty100TTweaks ++
+  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.SmallRocketMemConfig)
