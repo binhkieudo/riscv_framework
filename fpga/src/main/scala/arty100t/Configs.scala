@@ -34,6 +34,9 @@ class WithSystemModifications extends Config((site, here,up) => {
     size = x"1000_0000",
     beatBytes = site(MemoryBusKey).beatBytes,
     idBits = 4), 1))
+  case DebugModuleKey => up(DebugModuleKey).map{ debug =>
+    debug.copy(clockGate = false)
+  }
   case SerialTLKey => None // remove serialized tl port
 })
 
@@ -45,6 +48,9 @@ class WithTinySystemModifications extends Config((site, here,up) => {
     require (make.! == 0, "Failed to build bootrom")
     p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
   }
+  case DebugModuleKey => up(DebugModuleKey).map{ debug =>
+    debug.copy(clockGate = false)
+  }
   case SerialTLKey => None // remove serialized tl port
 })
 
@@ -52,6 +58,7 @@ class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
   case PeripheryGPIOKey => List(GPIOParams(address = BigInt(0x64002000L), width = 16))
   case PeripherySPIKey => List(SPIParams(rAddress = BigInt(0x64003000L)))
+
 })
 
 class WithArty100TTweaks extends Config(
@@ -113,9 +120,10 @@ class WithArty100TinyTweaks extends Config(
 
 class RocketTinyArty100TConfig extends Config(
   new WithArty100TinyTweaks ++
+  new chipyard.config.WithBroadcastManager ++
   new chipyard.SmallRocketConfig)
 
 class RocketTinyMemArty100TConfig extends Config(
   new WithArty100TTweaks ++
-  new chipyard.config.WithBroadcastManager ++ // no l2
-  new chipyard.SmallRocketMemConfig)
+//  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.L1ScratchpadRocketConfig)

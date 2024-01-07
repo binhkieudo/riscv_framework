@@ -25,14 +25,21 @@ class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
   new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
-  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
+  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
+  new WithL1IScratchAddressSets(address = 0x40000000L, ways = 2) ++ // Setup ICache Scratchpad, ICache ways must be >= 2
+  new WithL1DScratchAddressSets(address = 0x80000000L) ++         // Setup DCache Scratchpad
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
 class SmallRocketMemConfig extends Config(
-  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
-  new WithL1DScratchAddressSets(address = 0x40000000L) ++
-  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
+//  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
+  new testchipip.WithMbusScratchpad(banks=2, partitions=2) ++
+  new freechips.rocketchip.subsystem.WithNoMemPort ++
+//  new WithL1DScratchAddressSets(address = 0x40000000L) ++
+//  new WithL1IScratchAddressSets(address = 0x40004000L, ways = 2) ++ // Setup ICache Scratchpad, ICache ways must be >= 2
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
@@ -40,6 +47,14 @@ class WithL1DScratchAddressSets(address: BigInt = 0x80000000L) extends Config((s
   case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
     case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
       dcache = tp.tileParams.dcache.map(_.copy(scratch = Some(address)))))
+    case t => t
+  }
+})
+
+class WithL1IScratchAddressSets(address: BigInt = 0x80000000L, ways: Int = 2) extends Config((site, here, up) => {
+  case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
+    case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      icache = tp.tileParams.icache.map(_.copy(itimAddr = Some(address), nWays = ways))))
     case t => t
   }
 })
@@ -83,7 +98,7 @@ class ScratchpadOnlyRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithNBanks(0) ++
   new freechips.rocketchip.subsystem.WithNoMemPort ++          // remove offchip mem port
   new freechips.rocketchip.subsystem.WithScratchpadsOnly ++    // use rocket l1 DCache scratchpad as base phys mem
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++
   new chipyard.config.AbstractConfig)
 // DOC include end: l1scratchpadrocket
 
@@ -96,14 +111,15 @@ class MMIOScratchpadOnlyRocketConfig extends Config(
 class L1ScratchpadRocketConfig extends Config(
   new chipyard.config.WithRocketICacheScratchpad ++         // use rocket ICache scratchpad
   new chipyard.config.WithRocketDCacheScratchpad ++         // use rocket DCache scratchpad
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++
   new chipyard.config.AbstractConfig)
 
 // DOC include start: mbusscratchpadrocket
 class MbusScratchpadOnlyRocketConfig extends Config(
-  new testchipip.WithMbusScratchpad(banks=2, partitions=2) ++               // add 2 partitions of 2 banks mbus backing scratchpad
+  new testchipip.WithMbusScratchpad(size=(1 << 17)) ++               // add 2 partitions of 2 banks mbus backing scratchpad
   new freechips.rocketchip.subsystem.WithNoMemPort ++         // remove offchip mem port
-  new freechips.rocketchip.subsystem.WithNBigCores(1) ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++
   new chipyard.config.AbstractConfig)
 // DOC include end: mbusscratchpadrocket
 
