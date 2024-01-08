@@ -9,7 +9,6 @@ import freechips.rocketchip.subsystem.{InSubsystem, RocketTileAttachParams, Tile
 // --------------
 
 class RocketConfig extends Config(
-  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core
   new chipyard.config.AbstractConfig)
 
@@ -25,21 +24,18 @@ class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
   new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
-  new freechips.rocketchip.subsystem.WithRV32 ++
   new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
-  new WithL1IScratchAddressSets(address = 0x40000000L, ways = 2) ++ // Setup ICache Scratchpad, ICache ways must be >= 2
   new WithL1DScratchAddressSets(address = 0x80000000L) ++         // Setup DCache Scratchpad
-  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
+  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
 class SmallRocketMemConfig extends Config(
-//  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
-  new testchipip.WithMbusScratchpad(banks=2, partitions=2) ++
-  new freechips.rocketchip.subsystem.WithNoMemPort ++
-//  new WithL1DScratchAddressSets(address = 0x40000000L) ++
+  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
+  new WithL1DScratchAddressSets(address = 0x40000000L) ++
 //  new WithL1IScratchAddressSets(address = 0x40004000L, ways = 2) ++ // Setup ICache Scratchpad, ICache ways must be >= 2
-  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
+  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
@@ -112,7 +108,8 @@ class L1ScratchpadRocketConfig extends Config(
   new chipyard.config.WithRocketICacheScratchpad ++         // use rocket ICache scratchpad
   new chipyard.config.WithRocketDCacheScratchpad ++         // use rocket DCache scratchpad
   new freechips.rocketchip.subsystem.WithRV32 ++
-  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++
+  new freechips.rocketchip.subsystem.WithL1ICacheWays(ways=2) ++
+  new freechips.rocketchip.subsystem.With1TinyCore ++
   new chipyard.config.AbstractConfig)
 
 // DOC include start: mbusscratchpadrocket

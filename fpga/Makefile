@@ -14,7 +14,7 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= arty100tTiny
+SUB_PROJECT ?= arty100t
 
 ifeq ($(SUB_PROJECT),arty100t)
 	# TODO: Fix with Arty
