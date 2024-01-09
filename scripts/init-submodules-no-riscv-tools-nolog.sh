@@ -113,17 +113,29 @@ cd "$RDIR"
         done
     }
 
+    git_submodule_include() {
+        # Call the given subcommand (shell function) on each submodule
+        # path to temporarily exclude during the recursive update
+        for name in \
+            generators/rocket-chip*
+        do
+            "$1" "${name%/}"
+        done
+    }
+
     _skip() { git config --local "submodule.${1}.update" none ; }
     _unskip() { git config --local --unset-all "submodule.${1}.update" || : ; }
 
     trap 'git_submodule_exclude _unskip' EXIT INT TERM
     (
         set -x
-        git config --local "submodule.generators/rocket-chip.update" none
         git_submodule_exclude _skip
+        git_submodule_include _unskip
         git submodule update --init --recursive #--jobs 8
     )
 )
+
+git submodule add https://github.com/chipsalliance/rocket-chip.git $RDIR/generators/rocket-chip
 
 (
     # Non-recursive clone to exclude riscv-linux
@@ -140,7 +152,6 @@ cd "$RDIR"
     # Only shallow clone needed for basic SW tests
     git submodule update --init software/firemarshal
 )
-
 # Configure firemarshal to know where our firesim installation is
 if [ ! -f ./software/firemarshal/marshal-config.yaml ]; then
   echo "firesim-dir: '../../sims/firesim/'" > ./software/firemarshal/marshal-config.yaml
