@@ -102,7 +102,6 @@ cd "$RDIR"
             toolchains/libgloss \
             generators/sha3 \
             generators/gemmini \
-            generators/rocket-chip \
             sims/firesim \
             software/nvdla-workload \
             software/coremark \
@@ -120,6 +119,7 @@ cd "$RDIR"
     trap 'git_submodule_exclude _unskip' EXIT INT TERM
     (
         set -x
+        git config --local "submodule.generators/rocket-chip.update" none
         git_submodule_exclude _skip
         git submodule update --init --recursive #--jobs 8
     )
