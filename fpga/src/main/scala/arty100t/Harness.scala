@@ -99,6 +99,9 @@ class Arty100TTestHarnessImp(_outer: Arty100THarness) extends LazyRawModuleImp(_
   def referenceReset = _outer.dutClock.in.head._1.reset
   def success = { require(false, "Unused"); false.B }
 
+  childClock := harnessBinderClock
+  childReset := harnessBinderReset
+
   _outer.ddrOverlay.mig.module.clock := harnessBinderClock
   _outer.ddrOverlay.mig.module.reset := harnessBinderReset
   _outer.ddrBlockDuringReset.module.clock := harnessBinderClock

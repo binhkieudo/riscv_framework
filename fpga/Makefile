@@ -14,30 +14,17 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= arty100tTiny
+SUB_PROJECT ?= arty100tTinyMem
 
-ifeq ($(SUB_PROJECT),arty100t)
-	# TODO: Fix with Arty
-	SBT_PROJECT       ?= fpga_platforms
-	MODEL             ?= Arty100THarness
-	VLOG_MODEL        ?= Arty100THarness
-	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
-	CONFIG            ?= RocketArty100TConfig
-	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
-	GENERATOR_PACKAGE ?= chipyard
-	TB                ?= none # unused
-	TOP               ?= ChipTop
-	BOARD             ?= arty_a7_100
-	FPGA_BRAND        ?= xilinx
-endif
-
+############## SINGLE CORE CONFIGURATIONS #########################
+# Using DDR without L2 Cache
 ifeq ($(SUB_PROJECT),arty100tTinyMem)
 	# TODO: Fix with Arty
 	SBT_PROJECT       ?= fpga_platforms
 	MODEL             ?= Arty100THarness
 	VLOG_MODEL        ?= Arty100THarness
 	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
-	CONFIG            ?= RocketTinyMemArty100TConfig
+	CONFIG            ?= RocketTinyMemNoCacheArty100TConfig
 	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
 	GENERATOR_PACKAGE ?= chipyard
 	TB                ?= none # unused
@@ -46,6 +33,23 @@ ifeq ($(SUB_PROJECT),arty100tTinyMem)
 	FPGA_BRAND        ?= xilinx
 endif
 
+# Using DDR with L2 Cache
+ifeq ($(SUB_PROJECT),arty100tTinyMemCache)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketTinyMemCacheArty100TConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
+
+# Using DCache as memory
 ifeq ($(SUB_PROJECT),arty100tTiny)
 	# TODO: Fix with Arty
 	SBT_PROJECT       ?= fpga_platforms
@@ -61,6 +65,21 @@ ifeq ($(SUB_PROJECT),arty100tTiny)
 	FPGA_BRAND        ?= xilinx
 endif
 
+############## MULTI-CORE CONFIGURATIONS #########################
+ifeq ($(SUB_PROJECT),arty100t)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketArty100TConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
 
 
 include $(base_dir)/variables.mk
@@ -140,5 +159,5 @@ debug-bitstream: $(build_dir)/obj/post_synth.dcp
 #########################################################################################
 .PHONY: clean
 clean:
-	rm -rf $(gen_dir)
+	rm -rf $(build_dir)
 	rm -f vivado*

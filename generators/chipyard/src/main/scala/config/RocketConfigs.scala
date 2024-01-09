@@ -24,18 +24,17 @@ class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
   new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++     // 8KB
   new WithL1DScratchAddressSets(address = 0x80000000L) ++         // Setup DCache Scratchpad
   new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
 class SmallRocketMemConfig extends Config(
-  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
-  new WithL1DScratchAddressSets(address = 0x40000000L) ++
-//  new WithL1IScratchAddressSets(address = 0x40004000L, ways = 2) ++ // Setup ICache Scratchpad, ICache ways must be >= 2
-  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
+//  new WithoutL1DScratchAddressSets ++                             // Remove scratch memory from TinyCore
+  new freechips.rocketchip.subsystem.WithNoMemPort ++
+//  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
@@ -43,6 +42,14 @@ class WithL1DScratchAddressSets(address: BigInt = 0x80000000L) extends Config((s
   case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
     case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
       dcache = tp.tileParams.dcache.map(_.copy(scratch = Some(address)))))
+    case t => t
+  }
+})
+
+class WithoutL1DScratchAddressSets extends Config((site, here, up) => {
+  case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
+    case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      dcache = tp.tileParams.dcache.map(_.copy(scratch = None))))
     case t => t
   }
 })
