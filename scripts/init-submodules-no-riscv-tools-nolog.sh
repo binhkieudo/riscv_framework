@@ -102,6 +102,7 @@ cd "$RDIR"
             toolchains/libgloss \
             generators/sha3 \
             generators/gemmini \
+            generators/rocket-chip \
             sims/firesim \
             software/nvdla-workload \
             software/coremark \

@@ -1,6 +1,3 @@
-[submodule "rocket-chip"]
-	path = generators/rocket-chip
-	url = https://github.com/chipsalliance/rocket-chip.git
 [submodule "testchipip"]
 	path = generators/testchipip
 	url = https://github.com/ucb-bar/testchipip.git
@@ -130,3 +127,6 @@
 [submodule "generators/bar-fetchers"]
 	path = generators/bar-fetchers
 	url = https://github.com/ucb-bar/bar-fetchers.git
+[submodule "generators/rocket-chip"]
+	path = generators/rocket-chip
+	url = https://github.com/chipsalliance/rocket-chip.git
