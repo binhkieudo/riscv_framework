@@ -120,7 +120,7 @@ class WithArty100TinyTweaks extends Config(
 
 class RocketTinyArty100TConfig extends Config(
   new WithArty100TinyTweaks ++
-  new chipyard.config.WithBroadcastManager ++
+  new chipyard.config.WithBroadcastManager ++ // no l2
   new chipyard.SmallRocketConfig)
 
 class RocketTinyMemArty100TConfig extends Config(
