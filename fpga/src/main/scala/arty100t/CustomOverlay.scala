@@ -4,6 +4,7 @@ import freechips.rocketchip.diplomacy.{InModuleBody, ValName}
 import chisel3._
 import org.chipsalliance.cde.config._
 import freechips.rocketchip.diplomacy._
+import freechips.rocketchip.tile.XLen
 import freechips.rocketchip.tilelink._
 import freechips.rocketchip.util.SyncResetSynchronizerShiftReg
 import sifive.fpgashells.clocks._
@@ -60,6 +61,8 @@ class DDRArty100PlacedOverlay(val shell: Arty100TCustomShell,
   val ddrUI     = shell { ClockSourceNode(freqMHz = 100) }
   val areset    = shell { ClockSinkNode(Seq(ClockSinkParameters())) }
   areset := di.wrangler := ddrUI
+
+//  mig.island.node.portParams.head.beatBytes = xlen / 8
 
   def overlayOutput = DDROverlayOutput(ddr = mig.node)
   def ioFactory = new XilinxArty100TMIGPads(size)

@@ -25,16 +25,19 @@ class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
   new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++     // 8KB
-  new WithL1DScratchAddressSets(address = 0x80000000L) ++         // Setup DCache Scratchpad
+  new WithL1DScratchAddressSets(address = 0x40000000L) ++         // Setup DCache Scratchpad
   new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
 class SmallRocketMemConfig extends Config(
-//  new WithoutL1DScratchAddressSets ++                             // Remove scratch memory from TinyCore
+  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++
   new freechips.rocketchip.subsystem.WithNoMemPort ++
-//  new freechips.rocketchip.subsystem.WithRV32 ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++     // 8KB
+  new WithL1DScratchAddressSets(address = 0x40000000L) ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
+//  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 

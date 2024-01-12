@@ -12,10 +12,10 @@
 
  // Some things missing from the official encoding.h
 #if __riscv_xlen == 32
-  #define MCAUSE_INT         0x80000000UL
+  #define MCAUSE_INT         0x40000000UL
   #define MCAUSE_CAUSE       0x7FFFFFFFUL
 #else
-   #define MCAUSE_INT         0x8000000000000000UL
+   #define MCAUSE_INT         0x4000000000000000UL
    #define MCAUSE_CAUSE       0x7FFFFFFFFFFFFFFFUL
 #endif
 
@@ -39,7 +39,7 @@
 #define GPIO_CTRL_SIZE _AC(0x1000,UL)
 #define MASKROM_MEM_ADDR _AC(0x10000,UL)
 #define MASKROM_MEM_SIZE _AC(0x10000,UL)
-#define MEMORY_MEM_ADDR _AC(0x80000000,UL)
+#define MEMORY_MEM_ADDR _AC(0x40000000,UL)
 #define MEMORY_MEM_SIZE _AC(0x10000000,UL)
 #define PLIC_CTRL_ADDR _AC(0xc000000,UL)
 #define PLIC_CTRL_SIZE _AC(0x4000000,UL)
