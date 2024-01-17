@@ -61,7 +61,6 @@ Vivado must be in your PATH
 Enter fpga folder
 ```shell
 cd fpga
-make bitstream
 ```
 
 Build the bitstream with your selected configuration.
