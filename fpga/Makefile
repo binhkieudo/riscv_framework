@@ -66,13 +66,13 @@ ifeq ($(SUB_PROJECT),arty100tTiny)
 endif
 
 ############## MULTI-CORE CONFIGURATIONS #########################
-ifeq ($(SUB_PROJECT),arty100t)
+ifeq ($(SUB_PROJECT),arty100t4Cores)
 	# TODO: Fix with Arty
 	SBT_PROJECT       ?= fpga_platforms
 	MODEL             ?= Arty100THarness
 	VLOG_MODEL        ?= Arty100THarness
 	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
-	CONFIG            ?= RocketArty100TConfig
+	CONFIG            ?= Rocket4CoresMemArty100TConfig
 	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
 	GENERATOR_PACKAGE ?= chipyard
 	TB                ?= none # unused
@@ -114,6 +114,7 @@ $(sim_files): $(SIM_FILE_REQS) $(ALL_MODS_FILELIST) | $(GEN_COLLATERAL_DIR)
 #########################################################################################
 include $(base_dir)/common.mk
 
+bitfile_dir=$(build_dir)/obj
 #########################################################################################
 # copy from other directory
 #########################################################################################
@@ -153,6 +154,12 @@ debug-bitstream: $(build_dir)/obj/post_synth.dcp
 			$(BOARD) \
 			$(build_dir)/debug_obj \
 			$(fpga_common_script_dir)
+
+.PHONY: download_bitstream
+download_bitstream:
+	vivado -mode batch -nolog -nojournal -notrace \
+        -source $(sim_dir)/scripts/download_bitstream.tcl \
+        -tclargs $(build_dir)/obj/$(MODEL).bit
 
 #########################################################################################
 # general cleanup rules

@@ -23,12 +23,6 @@ import sifive.blocks.devices.spi.{PeripherySPIKey, SPIParams}
 //})
 class WithSystemModifications extends Config((site, here,up) => {
   case DTSTimebase => BigInt((1e6).toLong)
-  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
-      val freqMHz = (site(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toLong
-      val make = s"make -C fpga/src/main/resources/arty100T/sdboot PBUS_CLK=${freqMHz} bin"
-      require (make.! == 0, "Failed to build bootrom")
-      p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
-    }
   case ExtTLMem => Some(MemoryPortParams(MasterPortParams(
     base = x"8000_0000",
     size = x"1000_0000",
@@ -136,8 +130,8 @@ class WithArty100TinyTweaks extends Config(
 
 class RocketArty100TConfig extends Config(
   new WithArty100TTweaks ++
-    new chipyard.config.WithBroadcastManager ++ // no l2
-    new chipyard.RocketConfig)
+  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.RocketConfig)
 
 class RocketTinyArty100TConfig extends Config(
   new WithArty100TinyTweaks ++
@@ -152,3 +146,8 @@ class RocketTinyMemNoCacheArty100TConfig extends Config(
 class RocketTinyMemCacheArty100TConfig extends Config(
   new WithArty100TTweaks ++
   new chipyard.SmallRocketMemConfig)
+
+class Rocket4CoresMemArty100TConfig extends Config (
+  new WithArty100TTweaks ++
+  new chipyard.config.WithBroadcastManager ++// no l2
+  new chipyard.FourCoreRocketMemConfig)

@@ -26,18 +26,22 @@ class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
   new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++     // 8KB
   new WithL1DScratchAddressSets(address = 0x40000000L) ++         // Setup DCache Scratchpad
-  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
 class SmallRocketMemConfig extends Config(
-  new freechips.rocketchip.subsystem.WithRV32 ++
-  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++
-  new freechips.rocketchip.subsystem.WithNoMemPort ++
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++     // 8KB
+  new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
   new WithL1DScratchAddressSets(address = 0x40000000L) ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
-//  new freechips.rocketchip.subsystem.With1TinyCore ++             // single tiny rocket-core
+  new chipyard.config.AbstractConfig
+)
+
+class FourCoreRocketMemConfig extends Config(
+  new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
+  new WithRocketDCacheScratchpad ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(4) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
@@ -62,6 +66,14 @@ class WithL1IScratchAddressSets(address: BigInt = 0x80000000L, ways: Int = 2) ex
     case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
       icache = tp.tileParams.icache.map(_.copy(itimAddr = Some(address), nWays = ways))))
     case t => t
+  }
+})
+
+class WithRocketDCacheScratchpad extends Config((site, here, up) => {
+  case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
+    case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      dcache = tp.tileParams.dcache.map(_.copy(nSets = 64, nWays = 1, scratch = Some(0x40000000 + tp.tileParams.hartId * 0x1000)))
+    ))
   }
 })
 

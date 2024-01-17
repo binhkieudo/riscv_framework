@@ -1,6 +1,7 @@
 #################################
 # RISCV Toolchain
 #################################
+NHART ?= 0
 
 ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 BUILD_DIR := $(ROOT_DIR)build
@@ -9,7 +10,7 @@ CC=$(RISCV)/bin/riscv64-unknown-elf-gcc
 OBJCOPY=$(RISCV)/bin/riscv64-unknown-elf-objcopy
 OBJDUMP=$(RISCV)/bin/riscv64-unknown-elf-objdump
 CFLAGS=-march=rv64ima -mcmodel=medany -O0 -std=gnu11 -Wall -nostartfiles
-CFLAGS+= -fno-common -g -DENTROPY=0 -mabi=lp64 -DNONSMP_HART=0
+CFLAGS+= -fno-common -g -DENTROPY=0 -mabi=lp64 -DNONSMP_HART=$(NHART)
 CFLAGS+= -I $(ROOT_DIR)/include -I.
 LFLAGS=-static -nostdlib -L $(ROOT_DIR)/linker -T hello.elf.lds
 
