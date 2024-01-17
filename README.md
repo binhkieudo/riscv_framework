@@ -56,10 +56,16 @@ source env.sh
 
 ## Build your first FPGA prototype (currently support Arty100T)
 
-
 Vivado must be in your PATH
 
+Enter fpga folder
 ```shell
 cd fpga
 make bitstream
 ```
+
+Build the bitstream with your selected configuration.
+```shell
+make SUB_PROJECT=arty100tTiny bitstream
+```
+
