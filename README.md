@@ -68,3 +68,7 @@ Build the bitstream with your selected configuration.
 make SUB_PROJECT=arty100tTiny bitstream
 ```
 
+After generating ".bit" file, connect the Arty board to your PC (make sure that the rules for Digilent cable are defined beforehand). Then program the board.
+```shell
+make download_bitstream
+```
