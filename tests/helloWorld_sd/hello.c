@@ -16,7 +16,7 @@
 #define PAYLOAD_SIZE (PAYLOAD_SIZE_B / SECTOR_SIZE_B)
 
 // The sector at which the BBL partition starts
-#define BBL_PARTITION_START_SECTOR 2048
+#define BBL_PARTITION_START_SECTOR 34
 
 #ifndef TL_CLK
 #error Must define TL_CLK
@@ -184,7 +184,7 @@ static int copy(void)
 	//REG32(spi, SPI_REG_SCKDIV) = (F_CLK / 16666666UL);
 	REG32(spi, SPI_REG_SCKDIV) = (F_CLK / 5000000UL);
 	// Read multiple block 8'b0101_0010
-	if (sd_cmd(0x52, BBL_PARTITION_START_SECTOR, 0x51) != 0x00) {
+	if (sd_cmd(0x52, BBL_PARTITION_START_SECTOR, 0xE1) != 0x00) {
 		sd_cmd_end();
 		return 1;
 	}
