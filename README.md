@@ -72,17 +72,16 @@ sudo ./gdisk /dev/sd?
 Where ? points to the SD card.
 
 After opening the SD card, check the existing partitions by pressing p, then Enter.
-<img src="https://github.com/binhkieudo/riscv_framework/assets/22954544/9ce04d3a-1c11-4ff5-b44c-31357dc6454c" alt="drawing" width="2000"/>
-![image](https://github.com/binhkieudo/riscv_framework/assets/22954544/9ce04d3a-1c11-4ff5-b44c-31357dc6454c)
+<img src="https://github.com/binhkieudo/riscv_framework/assets/22954544/9ce04d3a-1c11-4ff5-b44c-31357dc6454c" alt="drawing" width="700"/>
 
-Delete all existing partitions by d <partition number>. 
-![image](https://github.com/binhkieudo/riscv_framework/assets/22954544/4b09da7c-71f0-4e4f-b5e1-531424b109de)
+Delete all existing partitions by command d with the corresponding partition's number. 
+<img src="https://github.com/binhkieudo/riscv_framework/assets/22954544/442702fc-610e-44b7-bcbb-5c5b13bf88fe" alt="drawing" width="600"/>
 
 Then format the SD Card with the following options:
-![image](https://github.com/binhkieudo/riscv_framework/assets/22954544/901b67a2-32c9-47d9-8658-017c09a014dc)
+<img src="https://github.com/binhkieudo/riscv_framework/assets/22954544/2931ed12-4bef-4e6e-96b7-551d8059d15a" alt="drawing" width="700"/>
 
 After formatting the SD Card, print the new partition and save the configurations.
-![image](https://github.com/binhkieudo/riscv_framework/assets/22954544/bffa4c08-977d-427d-9da4-8a4e0555ab19)
+<img src="https://github.com/binhkieudo/riscv_framework/assets/22954544/a657a6da-617b-409a-8b2f-4f7ec7f96128" alt="drawing" width="700"/>
 
 ## Build your first FPGA prototype (currently support Arty100T)
 
