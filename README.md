@@ -72,6 +72,7 @@ sudo ./gdisk /dev/sd?
 Where ? points to the SD card.
 
 After opening the SD card, check the existing partitions by pressing p, then Enter.
+<img src="[drawing.jpg](https://github.com/binhkieudo/riscv_framework/assets/22954544/9ce04d3a-1c11-4ff5-b44c-31357dc6454c)" alt="drawing" width="200"/>
 ![image](https://github.com/binhkieudo/riscv_framework/assets/22954544/9ce04d3a-1c11-4ff5-b44c-31357dc6454c)
 
 Delete all existing partitions by d <partition number>. 
