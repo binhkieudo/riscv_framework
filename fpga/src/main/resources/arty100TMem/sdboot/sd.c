@@ -4,10 +4,12 @@
 #include <platform.h>
 
 #include "common.h"
+#include "smp.h"
 
 #define DEBUG
 #include "kprintf.h"
 
+int myid = 23;
 // Total payload in B
 #define PAYLOAD_SIZE_B (1 << 20) // default: 30MiB
 // A sector is 512 bytes, so (1 << 11) * 512B = 1 MiB
@@ -177,7 +179,7 @@ static int copy(void)
 
 	dputs("CMD18");
 
-	kprintf("LOADING 0x%xB PAYLOAD\r\n", PAYLOAD_SIZE_B);
+//	kprintf("LOADING 0x%xB PAYLOAD\r\n", PAYLOAD_SIZE_B);
 	kprintf("LOADING  ");
 
 	// TODO: Speed up SPI freq. (breaks between these two values)
@@ -224,11 +226,16 @@ static int copy(void)
 	return rc;
 }
 
-int main(void)
+int main(int mhartid, char** dump)
 {
 	REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
 
-	kputs("INIT");
+	if (mhartid == 0) kputs("BOOTING from core 0\r\n");
+	else if (mhartid == 1) kputs("BOOTING from core 1\r\n");
+    else if (mhartid == 2) kputs("BOOTING from core 2\r\n");
+    else if (mhartid == 3) kputs("BOOTING from core 3\r\n");
+    else kputs("BOOTING from unknown core\r\n");
+
 	sd_poweron();
 	if (sd_cmd0() ||
 	    sd_cmd8() ||
@@ -240,7 +247,7 @@ int main(void)
 		return 1;
 	}
 
-	kputs("BOOT");
+	kputs("FINISH");
 
 	__asm__ __volatile__ ("fence.i" : : : "memory");
 

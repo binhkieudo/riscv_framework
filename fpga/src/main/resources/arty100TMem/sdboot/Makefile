@@ -13,7 +13,7 @@ ifeq ($(XLEN),32)
 CFLAGS= -march=rv32ima -mabi=ilp32
 endif
 CFLAGS+= -mcmodel=medany -O2 -std=gnu11 -Wall -nostartfiles
-CFLAGS+= -fno-common -g -DENTROPY=0 -DNONSMP_HART=0
+CFLAGS+= -fno-common -g -DENTROPY=0 -DNONSMP_HART=1
 CFLAGS+= -I $(ROOT_DIR)/include -I.
 LFLAGS=-static -nostdlib -L $(ROOT_DIR)/linker -T sdboot.elf.lds
 

@@ -2,8 +2,9 @@ package chipyard
 
 import org.chipsalliance.cde.config.Config
 import freechips.rocketchip.diplomacy.AsynchronousCrossing
-import freechips.rocketchip.subsystem.{InSubsystem, RocketTileAttachParams, TilesLocated}
-
+import freechips.rocketchip.subsystem.{InSubsystem, RocketTileAttachParams, SystemBusKey, TilesLocated}
+import freechips.rocketchip.devices.tilelink.{BootROMLocated, BootROMParams}
+import freechips.rocketchip.tile.XLen
 // --------------
 // Rocket Configs
 // --------------
@@ -21,29 +22,35 @@ class TinyRocketConfig extends Config(
   new chipyard.config.AbstractConfig)
 
 class SmallRocketConfig extends Config(
-  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
-  new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
+//  new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++     // 8KB
-  new WithL1DScratchAddressSets(address = 0x40000000L) ++         // Setup DCache Scratchpad
-  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
-  new chipyard.config.AbstractConfig
-)
+//  new freechips.rocketchip.subsystem.WithoutMulDiv ++           // remove mult/div
+//  new freechips.rocketchip.subsystem.WithL1DCacheSets(16) ++      // 1KB
+//  new freechips.rocketchip.subsystem.WithL1ICacheSets(16) ++      // 1KB
+//  new WithBootROMSize (size = 0x2000) ++                        // 4-KB BootROM
+  new testchipip.WithMbusScratchpad(size=(1 << 13)) ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++        // Only allow single core
+  new chipyard.config.AbstractConfig)
 
 class SmallRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
   new WithL1DScratchAddressSets(address = 0x40000000L) ++
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(256) ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
 
 class FourCoreRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
-  new WithRocketDCacheScratchpad ++
   new freechips.rocketchip.subsystem.WithNSmallCores(4) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )
+
+class WithBootROMSize(size: Int = 0x1000) extends Config((site, here, up) => {
+  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
+    p.copy(size = size)
+  }
+})
 
 class WithL1DScratchAddressSets(address: BigInt = 0x80000000L) extends Config((site, here, up) => {
   case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {

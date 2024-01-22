@@ -2,6 +2,7 @@
 #ifndef SIFIVE_SMP
 #define SIFIVE_SMP
 #include "platform.h"
+#include "bits.h"
 
 // The maximum number of HARTs this code supports
 #ifndef MAX_HARTS
@@ -18,6 +19,11 @@
 /* If your test cannot handle multiple-threads, use this:
  *   smp_disable(reg1)
  */
+#define read_harthid(var) \
+  csrr t0, mhartid  ;\
+  li t1, var        ;\
+  STORE t0, 0(t1)
+
 #define smp_disable(reg1, reg2)			 \
   csrr reg1, mhartid				;\
   li   reg2, NONSMP_HART			;\

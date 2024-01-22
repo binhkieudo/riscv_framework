@@ -2,11 +2,18 @@
 ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 BUILD_DIR := $(ROOT_DIR)/build
 
+XLEN ?= 64
+
 CC=$(RISCV)/bin/riscv64-unknown-elf-gcc
 OBJCOPY=$(RISCV)/bin/riscv64-unknown-elf-objcopy
 OBJDUMP=$(RISCV)/bin/riscv64-unknown-elf-objdump
-CFLAGS=-march=rv32ima -mcmodel=medany -O2 -std=gnu11 -Wall -nostartfiles
-CFLAGS+= -fno-common -g -DENTROPY=0 -mabi=ilp32 -DNONSMP_HART=0
+
+CFLAGS= -march=rv64ima -mabi=lp64
+ifeq ($(XLEN),32)
+CFLAGS= -march=rv32ima -mabi=ilp32
+endif
+CFLAGS+= -mcmodel=medany -O2 -std=gnu11 -Wall -nostartfiles
+CFLAGS+= -fno-common -g -DENTROPY=0 -DNONSMP_HART=0
 CFLAGS+= -I $(ROOT_DIR)/include -I.
 LFLAGS=-static -nostdlib -L $(ROOT_DIR)/linker -T sdboot.elf.lds
 
@@ -17,7 +24,7 @@ default: elf bin dump
 elf := $(BUILD_DIR)/sdboot.elf
 $(elf): head.S kprintf.c sd.c
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -DTL_CLK="$(PBUS_CLK)UL" $(LFLAGS) -o $@ head.S sd.c kprintf.c
+	$(CC) $(CFLAGS) -DTL_CLK="$(PBUS_CLK)" $(LFLAGS) -o $@ head.S sd.c kprintf.c
 
 .PHONY: elf
 elf: $(elf)

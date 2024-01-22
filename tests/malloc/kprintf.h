@@ -1,9 +1,8 @@
-
 // See LICENSE.Sifive for license details.
 #ifndef _SDBOOT_KPRINTF_H
 #define _SDBOOT_KPRINTF_H
 
-#include <platform.h>
+#include "include/platform.h"
 #include <stdint.h>
 
 #define REG32(p, i)	((p)[(i) >> 2])
@@ -18,6 +17,7 @@
   #define UART_CTRL_ADDR _UART_CTRL_ADDR(UART_NUM)
 #endif
 static volatile uint32_t * const uart = (void *)(UART_CTRL_ADDR);
+static volatile uint32_t * const gpio = (void *)(GPIO_CTRL_ADDR);
 
 static inline void kputc(char c)
 {
