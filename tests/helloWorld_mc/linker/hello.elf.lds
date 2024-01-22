@@ -17,6 +17,10 @@ SECTIONS
 
   .text ALIGN((ORIGIN(memory_mem) + 0x0), 8) : AT(ALIGN((ORIGIN(memory_mem) + 0x0), 8)) {
     PROVIDE(_ftext = .);
+    *(.text.hart)
+    PROVIDE(_harttext = .);
+    *(._harttext)
+    . = (ORIGIN(memory_mem) + 0x1000);
     *(.text.init)
     *(.text.unlikely .text.unlikely.*)
     *(.text .text.* .gnu.linkonce.t.*)

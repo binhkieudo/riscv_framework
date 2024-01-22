@@ -3,6 +3,10 @@
 #include <smp.h>
 #include "common.h"
 
+  //.section .text.hart
+  //.globl _hart0
+//_hart0:
+  //li s0, 0
   .section .text.init
   .option norvc
   .globl _prog_start

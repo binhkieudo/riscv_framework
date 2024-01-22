@@ -8,7 +8,7 @@ extern unsigned char _rom_end[];
 extern unsigned char _ram[];
 extern unsigned char _ram_end[];
 
-extern unsigned char _ftext[];
+// extern unsigned int _ftext[];
 extern unsigned char _etext[];
 extern unsigned char _fbss[];
 extern unsigned char _ebss[];
