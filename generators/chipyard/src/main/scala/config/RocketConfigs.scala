@@ -4,6 +4,7 @@ import org.chipsalliance.cde.config.Config
 import freechips.rocketchip.diplomacy.AsynchronousCrossing
 import freechips.rocketchip.subsystem.{InSubsystem, RocketTileAttachParams, SystemBusKey, TilesLocated}
 import freechips.rocketchip.devices.tilelink.{BootROMLocated, BootROMParams}
+import freechips.rocketchip.rocket.MulDivParams
 import freechips.rocketchip.tile.XLen
 // --------------
 // Rocket Configs
@@ -40,6 +41,13 @@ class SmallRocketMemConfig extends Config(
   new chipyard.config.AbstractConfig
 )
 
+class BigRocketMemConfig extends Config(
+  new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
+  new WithFP64 ++
+  new freechips.rocketchip.subsystem.WithNBigCores(1) ++             // single tiny rocket-core
+  new chipyard.config.AbstractConfig
+)
+
 class FourCoreRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
   new freechips.rocketchip.subsystem.WithNSmallCores(4) ++             // single tiny rocket-core
@@ -49,6 +57,15 @@ class FourCoreRocketMemConfig extends Config(
 class WithBootROMSize(size: Int = 0x1000) extends Config((site, here, up) => {
   case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
     p.copy(size = size)
+  }
+})
+
+class WithFP64 extends Config((site, here, up) => {
+  case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
+    case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      core = tp.tileParams.core.copy(
+        fpu = tp.tileParams.core.fpu.map(_.copy(fLen = 64)))))
+    case t => t
   }
 })
 

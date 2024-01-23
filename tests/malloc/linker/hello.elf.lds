@@ -1,80 +1,138 @@
-OUTPUT_ARCH("riscv")
-ENTRY(_prog_start)
+OUTPUT_ARCH ("riscv")
+ENTRY (_prog_start)
 
 INCLUDE memory.lds
 
-PHDRS
-{
-  text PT_LOAD;
-  data PT_LOAD;
-  bss PT_LOAD;
-}
-
 SECTIONS
 {
-  PROVIDE(_ram = ORIGIN(memory_mem));
-  PROVIDE(_ram_end = _ram + LENGTH(memory_mem));
+    PROVIDE(_ram = ORIGIN(memory_mem));
+    PROVIDE(_ram_end = _ram + LENGTH(memory_mem));
 
-  .text ALIGN((ORIGIN(memory_mem) + 0x0), 8) : AT(ALIGN((ORIGIN(memory_mem) + 0x0), 8)) {
-    PROVIDE(_ftext = .);
-    *(.text.init)
-    *(.text.unlikely .text.unlikely.*)
-    *(.text .text.* .gnu.linkonce.t.*)
-    PROVIDE(_etext = .);
-    . += 0x40; /* to create a gap between .text and .data b/c ifetch can fetch ahead from .data */
-  } >memory_mem  :text
+    . = ORIGIN(memory_mem);
 
-  .eh_frame ALIGN((ADDR(.text) + SIZEOF(.text)), 8) : AT(ALIGN((LOADADDR(.text) + SIZEOF(.text)), 8)) {
-    *(.eh_frame)
-  } >memory_mem  :text
+    /* Keep under a power of 2 to reserve space for TCB */
+    PROVIDE (__stack_size_min = 24K);
 
-  .srodata ALIGN((ADDR(.eh_frame) + SIZEOF(.eh_frame)), 8) : AT(ALIGN((LOADADDR(.eh_frame) + SIZEOF(.eh_frame)), 8)) ALIGN_WITH_INPUT {
-    *(.srodata.cst16)
-    *(.srodata.cst8)
-    *(.srodata.cst4)
-    *(.srodata.cst2)
-    *(.srodata.*)
-  } >memory_mem  :data
+    .text : {
+        *(.text.init)
+        *(.text.unlikely .text.unlikely.*)
+        *(.text.startup .text.startup.*)
+        *(.text .text.*)
+        *(.gnu.linkonce.t.*)
+    }
+    PROVIDE (_etext = .);
 
-  .data ALIGN((ADDR(.srodata) + SIZEOF(.srodata)), 8) : AT(ALIGN((LOADADDR(.srodata) + SIZEOF(.srodata)), 8)) ALIGN_WITH_INPUT {
-    *(.data .data.* .gnu.linkonce.d.*)
-    *(.tohost) /* TODO: Support sections that aren't explicitly listed in this linker script */
-  } >memory_mem  :data
+    /* Static Thread Local Storage template */
+    .tdata : {
+        PROVIDE_HIDDEN (__tdata_start = .);
+        *(.tdata .tdata.*)
+        *(.gnu.linkonce.td.*)
+        PROVIDE_HIDDEN (__tdata_end = .);
+    }
+    PROVIDE (__tdata_size = SIZEOF (.tdata));
 
-  .sdata ALIGN((ADDR(.data) + SIZEOF(.data)), 8) : AT(ALIGN((LOADADDR(.data) + SIZEOF(.data)), 8)) ALIGN_WITH_INPUT {
-    *(.sdata .sdata.* .gnu.linkonce.s.*)
-  } >memory_mem  :data
+    .tbss (NOLOAD) : {
+        PROVIDE_HIDDEN (__tbss_start = .);
+        PROVIDE_HIDDEN (__tbss_offset = ABSOLUTE (__tbss_start - __tdata_start));
+        *(.tbss .tbss.*)
+        *(.gnu.linkonce.tb.*)
+        *(.tcommon)
+        PROVIDE_HIDDEN (__tbss_end = .);
+    }
+    PROVIDE (__tbss_size = SIZEOF (.tbss));
 
-  .rodata ALIGN((ADDR(.sdata) + SIZEOF(.sdata)), 8) : AT(ALIGN((LOADADDR(.sdata) + SIZEOF(.sdata)), 8)) ALIGN_WITH_INPUT {
-    *(.rodata .rodata.* .gnu.linkonce.r.*)
-    *(.dtb) /* Must be last if this code is added to RC's BootROM */
-  } >memory_mem  :data
+    .rodata : {
+        *(.rodata .rodata.*)
+        *(.gnu.linkonce.r.*)
+    }
 
-  PROVIDE(_data = ADDR(.rodata));
-  PROVIDE(_data_lma = LOADADDR(.rodata));
-  PROVIDE(_edata = .);
+    .preinit_array : {
+        PROVIDE_HIDDEN (__preinit_array_start = .);
+        KEEP (*(.preinit_array))
+        PROVIDE_HIDDEN (__preinit_array_end = .);
+    }
 
-  .bss ALIGN((ORIGIN(memory_mem) + 0x0), 8) : AT(ALIGN((ORIGIN(memory_mem) + 0x0), 8)) ALIGN(8) {
-    PROVIDE(_fbss = .);
-    PROVIDE(__global_pointer$ = . + 0x7C0);
-    *(.sbss .sbss.* .gnu.linkonce.sb.*)
-    *(.bss .bss.* .gnu.linkonce.b.*)
-    . = ALIGN(8);
-    PROVIDE(_ebss = .);
-  } >memory_mem  :bss
+    .init_array : {
+        PROVIDE_HIDDEN (__init_array_start = .);
+        KEEP (*(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*)))
+        KEEP (*(.init_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .ctors))
+        PROVIDE_HIDDEN (__init_array_end = .);
+    }
 
-  PROVIDE(_end = .);
+    .fini_array : {
+        PROVIDE_HIDDEN (__fini_array_start = .);
+        KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
+        KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
+        PROVIDE_HIDDEN (__fini_array_end = .);
+    }
 
-  /*
-   * heap_stack_region_usable_end: (ORIGIN(memory_mem) + LENGTH(memory_mem))
-   * heap_stack_min_size: 4096
-   * heap_stack_max_size: 1048576
-   */
-  PROVIDE(_sp = ALIGN(MIN((ORIGIN(memory_mem) + LENGTH(memory_mem)), _ebss + 1048576) - 7, 8));
-  PROVIDE(_heap_end = _sp - 2048);
+    .ctors : {
+        KEEP (*crtbegin.o(.ctors))
+        KEEP (*crtbegin?.o(.ctors))
+        KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o) .ctors))
+        KEEP (*(SORT(.ctors.*)))
+        KEEP (*(.ctors))
+    }
 
-  /* This section is a noop and is only used for the ASSERT */
-  .stack : {
-    ASSERT(_sp >= (_ebss + 4096), "Error: No room left for the heap and stack");
-  }
+    .dtors : {
+        KEEP (*crtbegin.o(.dtors))
+        KEEP (*crtbegin?.o(.dtors))
+        KEEP (*(EXCLUDE_FILE (*crtend.o *crtend?.o) .dtors))
+        KEEP (*(SORT(.dtors.*)))
+        KEEP (*(.dtors))
+    }
+
+    /* Host-Target Interface */
+    .htif ALIGN(0x40) : {
+        *(.htif)
+    }
+
+    .data : ALIGN (8) {
+        *(.data)
+        *(.gnu.linkonce.d.*)
+    }
+
+    .sdata : {
+        PROVIDE (__global_pointer$ = . + 0x800);
+        *(.sdata .sdata.*)
+        *(.gnu.linkonce.s.*)
+        *(.srodata.cst16)
+        *(.srodata.cst8)
+        *(.srodata.cst4)
+        *(.srodata.cst2)
+        *(.srodata .srodata.*)
+    }
+
+    PROVIDE (_edata = .);
+
+    .bss : ALIGN (8) {
+        PROVIDE_HIDDEN (__bss_start = .);
+        *(.sbss .sbss.*)
+        *(.gnu.linkonce.sb.*)
+        *(.bss .bss.*)
+        *(.gnu.linkonce.b.*)
+        *(COMMON)
+        PROVIDE_HIDDEN (__bss_end = .);
+    }
+
+    . = ALIGN (8);
+    
+    
+    /* Reserve heap space */
+    .heap : ALIGN (4K){
+      PROVIDE (_end = .);
+      PROVIDE(__heap_size = 128K);
+      . += __heap_size;
+      PROVIDE (__heap_end = .);
+    }
+
+    /* Place Thread Control Block (TCB) at bottom of hart stack */
+    PROVIDE (__tcb_size = __tbss_end - __tdata_start);
+    PROVIDE (__stack_align = MAX (ALIGNOF (.tdata), 0x10));
+    PROVIDE (__stack_start = ALIGN (__stack_align));
+    PROVIDE (__stack_shift = LOG2CEIL( ALIGN (__stack_size_min + __tcb_size, __stack_align)));
+    PROVIDE (__stack_size = 1 << __stack_shift);
+
+    /* Default boot hart */
+    PROVIDE (__boot_hart = 0);
 }

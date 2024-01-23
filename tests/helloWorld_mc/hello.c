@@ -4,6 +4,7 @@
 #include "include/platform.h"
 #include "kprintf.h"
 #include "sections.h"
+#include <pthread .h>
 
 #define hart_ctrl  __attribute__((__section__("._harttext")))
 

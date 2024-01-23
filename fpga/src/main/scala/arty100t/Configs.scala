@@ -143,6 +143,11 @@ class RocketTinyMemNoCacheArty100TConfig extends Config(
   new chipyard.config.WithBroadcastManager ++ // no l2
   new chipyard.SmallRocketMemConfig)
 
+class RocketBigMemNoCacheArty100TConfig extends Config(
+  new WithArty100TTweaks ++
+  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.BigRocketMemConfig)
+
 class RocketTinyMemCacheArty100TConfig extends Config(
   new WithArty100TTweaks ++
   new chipyard.SmallRocketMemConfig)

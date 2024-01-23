@@ -20,7 +20,7 @@ SECTIONS
     *(.text.hart)
     PROVIDE(_harttext = .);
     *(._harttext)
-    . = (ORIGIN(memory_mem) + 0x1000);
+    . = (ORIGIN(memory_mem) + 0x400);
     *(.text.init)
     *(.text.unlikely .text.unlikely.*)
     *(.text .text.* .gnu.linkonce.t.*)
