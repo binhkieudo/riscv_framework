@@ -35,8 +35,8 @@ class SmallRocketConfig extends Config(
 
 class SmallRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
-  new WithL1DScratchAddressSets(address = 0x40000000L) ++
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(256) ++
+//  new WithL1DScratchAddressSets(address = 0x40000000L) ++
+//  new freechips.rocketchip.subsystem.WithL1DCacheSets(256) ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )

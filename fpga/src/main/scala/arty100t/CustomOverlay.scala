@@ -192,15 +192,21 @@ class JTAGDebugArty100PlacedOverlay(val shell: Arty100TCustomShell,
   extends JTAGDebugXilinxPlacedOverlay(name, designInput, shellInput)
 {
   shell { InModuleBody {
-    shell.sdc.addClock("JTCK", IOPin(io.jtag_TCK), 10)
+    shell.sdc.addClock("JTCK", IOPin(io.jtag_TCK), 30)
     shell.sdc.addGroup(clocks = Seq("JTCK"))
     shell.xdc.clockDedicatedRouteFalse(IOPin(io.jtag_TCK))
-    val packagePinsWithPackageIOs = Seq(("F4", IOPin(io.jtag_TCK)),  //pin JD-3
-      ("D3", IOPin(io.jtag_TMS)),  //pin JD-2
-      ("D4", IOPin(io.jtag_TDI)),  //pin JD-1
-      ("F3", IOPin(io.jtag_TDO)),  //pin JD-3
-      ("E2", IOPin(io.srst_n)))    //pin JD-7
+    val packagePinsWithPackageIOs = Seq(("F3", IOPin(io.jtag_TCK)),  //pin JD-4
+      ("E2", IOPin(io.srst_n)),    //pin JD-7
+      ("D4", IOPin(io.jtag_TMS)),  //pin JD-1
+      ("D3", IOPin(io.jtag_TDI)),  //pin JD-2
+      ("F4", IOPin(io.jtag_TDO)))  //pin JD-3
 
+//    UIntToAnalog(true.B, io.srst_n, true.B)
+
+    // JD-1 D4
+    // JD-2 D3
+    // JD-3 F4
+    // JD-4 F3
     packagePinsWithPackageIOs foreach { case (pin, io) => {
       shell.xdc.addPackagePin(io, pin)
       shell.xdc.addIOStandard(io, "LVCMOS33")
