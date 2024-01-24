@@ -50,7 +50,7 @@ class BigRocketMemConfig extends Config(
 
 class FourCoreRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
-  new freechips.rocketchip.subsystem.WithNSmallCores(4) ++             // single tiny rocket-core
+  new freechips.rocketchip.subsystem.WithNSmallCores(4) ++
   new chipyard.config.AbstractConfig
 )
 

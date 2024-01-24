@@ -68,6 +68,19 @@ class WithDDRBootROM extends Config((site, here, up) => {
   }
 })
 
+class WithMcBootROM extends Config((site, here, up) => {
+  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
+    val freqMHz = (site(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toLong
+    // Make sure that the sdboot is always rebuilt
+    val clean = s"make -C fpga/src/main/resources/arty100TMc/sdboot clean"
+    require (clean.! == 0, "Failed to clean")
+    // Build the bootrom
+    val make = s"make -C fpga/src/main/resources/arty100TMc/sdboot XLEN=${site(XLen)} PBUS_CLK=${freqMHz}"
+    require (make.! == 0, "Failed to build bootrom")
+    p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100TMc/sdboot/build/sdboot.bin")
+  }
+})
+
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
   case PeripheryGPIOKey => List(GPIOParams(address = BigInt(0x64002000L), width = 16))
@@ -128,6 +141,34 @@ class WithArty100TinyTweaks extends Config(
   new freechips.rocketchip.subsystem.WithoutTLMonitors
 )
 
+class WithArty100TMcTweaks extends Config(
+  // clocking
+  new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
+  new chipyard.harness.WithHarnessBinderClockFreqMHz(50) ++
+  new chipyard.config.WithMemoryBusFrequency(50.0) ++
+  new chipyard.config.WithSystemBusFrequency(50.0) ++
+  new chipyard.config.WithPeripheryBusFrequency(50.0) ++
+  new chipyard.harness.WithAllClocksFromHarnessClockInstantiator ++
+  new chipyard.clocking.WithPassthroughClockGenerator ++
+  // harness binder
+  new WithArty100TDDR ++
+  new WithArty100TUART ++
+  new WithArty100TGPIO ++
+  new WithArty100TJTAG ++
+  new WithArty100TSDCard ++
+    // io binder
+  new WithUARTIOPassthrough ++
+  new WithGPIOIOPassthrough ++
+  new WithTLIOPassthrough ++
+  new WithSPIIOPassthrough ++
+    // other configuration
+  new WithDefaultPeripherals ++
+  new WithMcBootROM ++
+  new WithSystemModifications ++
+  new chipyard.config.WithTLBackingMemory ++ // FPGA-shells converts the AXI to TL for us
+  new freechips.rocketchip.subsystem.WithExtMemSize(BigInt(64) << 20) ++ // 256mb on ARTY
+  new freechips.rocketchip.subsystem.WithoutTLMonitors)
+
 class RocketArty100TConfig extends Config(
   new WithArty100TTweaks ++
   new chipyard.config.WithBroadcastManager ++ // no l2
@@ -153,6 +194,6 @@ class RocketTinyMemCacheArty100TConfig extends Config(
   new chipyard.SmallRocketMemConfig)
 
 class Rocket4CoresMemArty100TConfig extends Config (
-  new WithArty100TTweaks ++
+  new WithArty100TMcTweaks ++
   new chipyard.config.WithBroadcastManager ++// no l2
   new chipyard.FourCoreRocketMemConfig)

@@ -6,7 +6,7 @@ NHART ?= 0
 ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 BUILD_DIR := $(ROOT_DIR)build
 
-CC=$(RISCV)/bin/riscv64-unknown-linux-gnu-gcc
+CC=$(RISCV)/bin/riscv64-unknown-elf-gcc
 OBJCOPY=$(RISCV)/bin/riscv64-unknown-elf-objcopy
 OBJDUMP=$(RISCV)/bin/riscv64-unknown-elf-objdump
 CFLAGS=-march=rv64ima -mcmodel=medany -O0 -std=gnu11 -Wall -nostartfiles
