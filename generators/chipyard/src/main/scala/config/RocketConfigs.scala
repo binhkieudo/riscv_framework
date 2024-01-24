@@ -50,9 +50,9 @@ class BigRocketMemConfig extends Config(
 
 class FourCoreRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
+  new WithRocketDCacheScratchpad ++
   new freechips.rocketchip.subsystem.WithNSmallCores(4) ++
-  new chipyard.config.AbstractConfig
-)
+  new chipyard.config.AbstractConfig)
 
 class WithBootROMSize(size: Int = 0x1000) extends Config((site, here, up) => {
   case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>

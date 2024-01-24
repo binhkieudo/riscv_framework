@@ -26,7 +26,6 @@
 #define F_CLK TL_CLK
 
 static volatile uint32_t * const spi = (void *)(SPI_CTRL_ADDR);
-static volatile uint32_t * const msip = (void *)(CLINT_CTRL_ADDR);
 
 static inline uint8_t spi_xfer(uint8_t d)
 {
@@ -232,21 +231,16 @@ int main(int mhartid, char** dump)
 
 	if (mhartid == 0) {
 		kputs("BOOTING from core 0\r\n");
-		REG32(msip, CLINT_MSIP0) = CLINT_MSIPCLR;
 	}
-	else if (mhartid == 1) {
+	if (mhartid == 1) {
 		kputs("BOOTING from core 1\r\n");
-		REG32(msip, CLINT_MSIP1) = CLINT_MSIPCLR;
 	}
-    else if (mhartid == 2) {
-		kputs("BOOTING from core 2\r\n");
-		REG32(msip, CLINT_MSIP2) = CLINT_MSIPCLR;
+    if (mhartid == 2) {
+		kputs("BOOTING from core 2\r\n");;
 	}
-    else if (mhartid == 3) {
+    if (mhartid == 3) {
 		kputs("BOOTING from core 3\r\n");
-		REG32(msip, CLINT_MSIP3) = CLINT_MSIPCLR;
 	}
-    else kputs("BOOTING from unknown core\r\n");
 
 	if (mhartid == 0) {
 		sd_poweron();

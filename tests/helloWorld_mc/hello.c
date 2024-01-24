@@ -46,5 +46,7 @@ int main(void) {
   kputs("Print in reverse order\n");
   print_inrevorder();
 
+  while (1);
+
   return 0;
 }
