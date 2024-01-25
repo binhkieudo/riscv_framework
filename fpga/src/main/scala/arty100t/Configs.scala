@@ -81,6 +81,19 @@ class WithMcBootROM extends Config((site, here, up) => {
   }
 })
 
+class WithMTBootROM extends Config((site, here, up) => {
+  case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
+    val freqMHz = (site(SystemBusKey).dtsFrequency.get / (1000 * 1000)).toLong
+    // Make sure that the sdboot is always rebuilt
+    val clean = s"make -C fpga/src/main/resources/arty100TMT/sdboot clean"
+    require (clean.! == 0, "Failed to clean")
+    // Build the bootrom
+    val make = s"make -C fpga/src/main/resources/arty100TMT/sdboot XLEN=${site(XLen)} PBUS_CLK=${freqMHz}"
+    require (make.! == 0, "Failed to build bootrom")
+    p.copy(hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100TMT/sdboot/build/sdboot.bin")
+  }
+})
+
 class WithDefaultPeripherals extends Config((site, here, up) => {
   case PeripheryUARTKey => List(UARTParams(address = BigInt(0x64000000L)))
   case PeripheryGPIOKey => List(GPIOParams(address = BigInt(0x64002000L), width = 16))
@@ -163,7 +176,6 @@ class WithArty100TMcTweaks extends Config(
   new WithSPIIOPassthrough ++
     // other configuration
   new WithDefaultPeripherals ++
-  new WithMcBootROM ++
   new WithSystemModifications ++
   new chipyard.config.WithTLBackingMemory ++ // FPGA-shells converts the AXI to TL for us
   new freechips.rocketchip.subsystem.WithExtMemSize(BigInt(64) << 20) ++ // 256mb on ARTY
@@ -195,5 +207,12 @@ class RocketTinyMemCacheArty100TConfig extends Config(
 
 class Rocket4CoresMemArty100TConfig extends Config (
   new WithArty100TMcTweaks ++
+  new WithMcBootROM ++
+  new chipyard.config.WithBroadcastManager ++// no l2
+  new chipyard.FourCoreRocketMemConfig)
+
+class Rocket4CoresMTArty100TConfig extends Config (
+  new WithArty100TMcTweaks ++
+  new WithMTBootROM ++
   new chipyard.config.WithBroadcastManager ++// no l2
   new chipyard.FourCoreRocketMemConfig)

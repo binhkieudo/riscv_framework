@@ -2,7 +2,7 @@ package chipyard.fpga.arty100t
 
 import chisel3._
 import freechips.rocketchip.jtag.JTAGIO
-import freechips.rocketchip.subsystem.PeripheryBusKey
+import freechips.rocketchip.subsystem.{BaseSubsystem, PeripheryBusKey}
 import freechips.rocketchip.tilelink.TLBundle
 import freechips.rocketchip.util.HeterogeneousBag
 import freechips.rocketchip.diplomacy.LazyRawModuleImp
@@ -12,9 +12,10 @@ import sifive.blocks.devices.pinctrl.BasePin
 import sifive.fpgashells.ip.xilinx.{IBUFG, IOBUF, PULLUP, PowerOnResetFPGAOnly}
 import chipyard._
 import chipyard.harness._
-import chipyard.iobinders.JTAGChipIO
+import chipyard.iobinders.{GetSystemParameters, JTAGChipIO}
 import chisel3.experimental.BaseModule
 import freechips.rocketchip.devices.debug.HasPeripheryDebug
+import org.chipsalliance.cde.config.Parameters
 import sifive.blocks.devices.gpio.{GPIOPortIO, HasPeripheryGPIOModuleImp}
 import sifive.blocks.devices.spi.{HasPeripherySPI, HasPeripherySPIModuleImp, SPIPortIO}
 import sifive.fpgashells.shell.FlippedJTAGIO

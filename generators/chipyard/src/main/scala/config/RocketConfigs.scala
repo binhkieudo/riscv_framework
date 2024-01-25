@@ -1,11 +1,14 @@
 package chipyard
 
-import org.chipsalliance.cde.config.Config
-import freechips.rocketchip.diplomacy.AsynchronousCrossing
-import freechips.rocketchip.subsystem.{InSubsystem, RocketTileAttachParams, SystemBusKey, TilesLocated}
+import org.chipsalliance.cde.config.{Config, Field, Parameters}
+import freechips.rocketchip.diplomacy.{AddressSet, AsynchronousCrossing, LazyModule, MemoryDevice}
+import freechips.rocketchip.subsystem.{CacheBlockBytes, InSubsystem, RocketTileAttachParams, SBUS, SystemBusKey, TLBusWrapperLocation, TilesLocated}
 import freechips.rocketchip.devices.tilelink.{BootROMLocated, BootROMParams}
 import freechips.rocketchip.rocket.MulDivParams
 import freechips.rocketchip.tile.XLen
+import freechips.rocketchip.tilelink.{TLFragmenter, TLRAM}
+import testchipip.{BankedScratchpadKey, BankedScratchpadParams}
+import freechips.rocketchip.subsystem._
 // --------------
 // Rocket Configs
 // --------------
@@ -51,6 +54,7 @@ class BigRocketMemConfig extends Config(
 class FourCoreRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
   new WithRocketDCacheScratchpad ++
+  new testchipip.WithSbusScratchpad(base=0x70000000L, size = (4 << 10), banks=1) ++
   new freechips.rocketchip.subsystem.WithNSmallCores(4) ++
   new chipyard.config.AbstractConfig)
 
@@ -58,6 +62,17 @@ class WithBootROMSize(size: Int = 0x1000) extends Config((site, here, up) => {
   case BootROMLocated(x) => up(BootROMLocated(x), site).map{ p =>
     p.copy(size = size)
   }
+})
+
+class WithSRAM(base: BigInt = 0x80000000L, size: BigInt = (4 << 10), banks: Int = 1, partitions: Int = 1, busWhere: TLBusWrapperLocation = SBUS) (implicit p: Parameters) extends Config((site, here, up) => {
+  case BankedScratchpadKey => up(BankedScratchpadKey) ++
+    (0 until partitions).map { pa => BankedScratchpadParams(
+      base + pa * (size / partitions),
+      size / partitions,
+      busWhere = busWhere,
+      name = s"${busWhere.name}-scratchpad",
+      banks = banks)
+    }
 })
 
 class WithFP64 extends Config((site, here, up) => {
