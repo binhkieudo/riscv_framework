@@ -1,68 +1,43 @@
 // See LICENSE.Sifive for license details.
 #include <stdint.h>
+#include <stdio.h>
 #include "include/devices/clint.h"
 #include <platform.h>
 
 #include "common.h"
 #include "smp.h"
-#include "asm.h"
-
-#define DEBUG
 #include "kprintf.h"
 #include "asm.h"
+#include "thread.h"
 
-static volatile uint32_t * msip = (void *)(CLINT_CTRL_ADDR);
-char * msip0 = (void *)(CLINT_CTRL_ADDR + CLINT_MSIP0);
-char * msip1 = (void *)(CLINT_CTRL_ADDR + CLINT_MSIP1);
-char * msip2 = (void *)(CLINT_CTRL_ADDR + CLINT_MSIP2);
-char * msip3 = (void *)(CLINT_CTRL_ADDR + CLINT_MSIP3);
+#define DEBUG
 
-void delay() {
-	for (int i = 0; i < 10000; i ++);
-}
+void foo(int hartid, unsigned int thread_id) { 
+	mux_lock();
+	for (int i = 0; i < 100000; i++);
+	kprintf("Core %x run thread 0x%x\r\n", hartid, thread_id);
+	for (int i = 0; i < 10000000; i++);
+	mux_unlock();
+} 
 
-int main(int mhartid, char** dump)
+void foo2(int hartid, unsigned int thread_id) { 
+	mux_lock();
+	kprintf("Hart %x run thread 0x%x\r\n", hartid, thread_id);
+	for (int i = 0; i < 10000000; i++);
+	mux_unlock();
+} 
+
+int main(int thread_0, char** dump)
 {
 
-	REG32(msip, CLINT_MSIP1) = CLINT_MSIPEN;
-	REG32(msip, CLINT_MSIP2) = CLINT_MSIPEN;
-	REG32(msip, CLINT_MSIP3) = CLINT_MSIPEN;
+	REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
 
-	if (mhartid == 0) {
-		sem_wait(msip0);
-		REG32(msip, CLINT_MSIP0) = CLINT_MSIPCLR;
-		REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
-		kputs("BOOTING from core 0");
-		delay();
-		REG32(uart, UART_REG_TXCTRL) = UART_TXDIS;
-		sem_signal(msip3);
-	}
-	if (mhartid == 1) {
-		sem_wait(msip1);
-		REG32(msip, CLINT_MSIP1) = CLINT_MSIPCLR;
-		REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
-		kputs("BOOTING from core 1");
-		delay();
-		REG32(uart, UART_REG_TXCTRL) = UART_TXDIS;
-	}
-    if (mhartid == 2) {
+	thread_init();
+	for (int i = 0; i < 100; i = i + 1)
+		thread_create(&foo);
+	thread_join();
 
-		REG32(msip, CLINT_MSIP2) = CLINT_MSIPCLR;
-		REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
-		kputs("BOOTING from core 2");
-		delay();
-		REG32(uart, UART_REG_TXCTRL) = UART_TXDIS;
-		sem_signal(msip0);
-	}
-    if (mhartid == 3) {
-		sem_wait(msip3);
-		REG32(msip, CLINT_MSIP3) = CLINT_MSIPCLR;
-		REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
-		kputs("BOOTING from core 3");
-		delay();
-		REG32(uart, UART_REG_TXCTRL) = UART_TXDIS;
-		sem_signal(msip1);
-	}
+	while (1);
 
 	return 0;
 }

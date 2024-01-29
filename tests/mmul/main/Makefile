@@ -19,9 +19,9 @@ PBUS_CLK ?= 1000000
 default : elf bin dump
 
 elf := $(BUILD_DIR)/sd.elf
-$(elf): kprintf.c sd.c
+$(elf): kprintf.c sd.c thread.c
 	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -DTL_CLK="$(PBUS_CLK)UL" $(LFLAGS) -o $@ crt0.S func.S sd.c kprintf.c
+	$(CC) $(CFLAGS) -DTL_CLK="$(PBUS_CLK)UL" $(LFLAGS) -o $@ crt0.S func.S sd.c kprintf.c thread.c
 
 .PHONY: elf
 elf: $(elf)

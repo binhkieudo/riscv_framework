@@ -11,37 +11,59 @@
 #include "kprintf.h"
 #include "asm.h"
 
-#define STACK_TOP (BRAM_MEM_ADDR + 0xFF0)
+#define THREAD_QUEUE BRAM_MEM_ADDR
 
-volatile uint32_t * thrPtr = (uint32_t *)(STACK_TOP);
+struct threadPointer {
+	void *address;
+	unsigned int thread_id;
+};
+
+static volatile struct threadPointer** threadRdPtr = (volatile struct threadPointer**)(THREAD_QUEUE + 0xff0);
+static volatile struct threadPointer** threadWrPtr = (volatile struct threadPointer**)(THREAD_QUEUE + 0xff8);
+static const unsigned int threadPointerSize = sizeof(struct threadPointer);
+
 
 
 int main(int mhartid, char** dump)
 {
-	unsigned int *info_ptr;
-	unsigned int *address_ptr;
-	unsigned int info;
-	unsigned int address;
+	// *threadRdPtr = (struct threadPointer *)THREAD_QUEUE;
+
+	volatile unsigned long threadRdPtr_val;
+	volatile unsigned long address;
+	volatile unsigned int thread_id;
+
+	unsigned long threadWrPtr_val;
 
 	do {
 		// Get thread info
 		mux_lock();
-		info_ptr = (unsigned int *)(*thrPtr - 4);
-		address_ptr = (unsigned int*)(*thrPtr - 8);
-
-		info = *info_ptr;
-		address = *address_ptr;
-
-		*info_ptr = (mhartid << 29) | info;
-		*address_ptr = 0xffffffff;
-		*thrPtr	= address - 8;
+		address = (unsigned long)(*threadRdPtr)->address;
+		threadRdPtr_val = *threadRdPtr;
+		threadWrPtr_val = *threadWrPtr;
+		thread_id = (unsigned int)(*threadRdPtr)->thread_id;
+		if (threadRdPtr_val < threadWrPtr_val) {
+			threadRdPtr_val = threadRdPtr_val + threadPointerSize;
+			*threadRdPtr = (volatile struct threadPointer*)threadRdPtr_val;
+			mux_unlock();
+			// Run thread
+			void (*func_ptr)(int, unsigned int) = (void*)address;
+			(*func_ptr)(mhartid, thread_id);
+		}
+		else if (threadRdPtr_val == threadWrPtr_val) {
+			if (thread_id == 0xffffffff) { // ternimate signal
+				mux_unlock();
+				break;
+			}
+			else { // perform then wait for next thread
+				threadRdPtr_val = threadRdPtr_val + threadPointerSize;
+				*threadRdPtr = (volatile struct threadPointer*)threadRdPtr_val;
+				mux_unlock();
+				void (*func_ptr)(int, unsigned int) = (void*)address;
+				(*func_ptr)(mhartid, thread_id);
+			}
+		}
 		mux_unlock();
-
-		if (address == 0xffffffff) break;
-
-		// Run thread
-		void (*func_ptr)(int) = (void*)address;
-		(*func_ptr)(info); 	
+		// do nothing otherwise
 	}
 	while (1);
 	

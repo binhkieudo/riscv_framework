@@ -35,6 +35,7 @@
 #define CORE3_PRIVATE_MEM _AC(0x40003000, UL)
 #define END_PRIVATE_MEM   _AC(0x40004000, UL)
 
+
 #define CLINT_CTRL_ADDR _AC(0x2000000,UL)
 #define CLINT_CTRL_SIZE _AC(0x10000,UL)
 #define DEBUG_CTRL_ADDR _AC(0x0,UL)
@@ -61,7 +62,7 @@
 #define SPI_CTRL_SIZE _AC(0x1000,UL)
 
 // IOF masks
-
+#define MUTEX_KEY       (BRAM_MEM_ADDR + 0xfe0)
 
 // Interrupt numbers
 #define UART_INT_BASE 1

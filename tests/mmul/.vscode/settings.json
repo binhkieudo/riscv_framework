@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "clint.h": "c",
+        "asm.h": "c",
+        "thread.h": "c",
+        "platform.h": "c"
+    }
+}

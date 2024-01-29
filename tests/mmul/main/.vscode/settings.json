@@ -1,5 +1,13 @@
 {
     "files.associations": {
-        "clint.h": "c"
+        "clint.h": "c",
+        "stdbool.h": "c",
+        "stdint.h": "c",
+        "thread.h": "c",
+        "platform.h": "c",
+        "smp.h": "c"
+    },
+    "files.watcherExclude": {
+        "**/target": true
     }
 }

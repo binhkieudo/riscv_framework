@@ -3,8 +3,6 @@
 
 #include "platform.h"
 
-typedef unsigned int key_t;
-
 extern char _heap_share[];
 
 extern void mux_lock();

@@ -10,9 +10,9 @@
   .globl atomic_write
   .globl sem_wait
 // ====== Lock ====================  
-lock:
+mux_lock:
     li t0, 1
-    li a0, BRAM_MEM_ADDR
+    li a0, MUTEX_KEY
 _again:
     lw t1, 0(a0)   // Check if lock is held
     bnez t1, _again  // Retry if held
@@ -20,9 +20,9 @@ _again:
     bnez t1, _again  // Retry if held
     ret
 // ====== Unlock ==================
-unlock:
+mux_unlock:
     li t0, 0
-    li a0, BRAM_MEM_ADDR
+    li a0, MUTEX_KEY
     lw t1, 0(a0)   // Check if lock is held
     beqz t1, _exit_unlock
     amoswap.w t0, t0, (a0)
