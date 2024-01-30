@@ -1,5 +1,6 @@
 package chipyard
 
+import freechips.rocketchip.devices.debug.ExportDebug
 import org.chipsalliance.cde.config.{Config, Field, Parameters}
 import freechips.rocketchip.diplomacy.{AddressSet, AsynchronousCrossing, LazyModule, MemoryDevice}
 import freechips.rocketchip.subsystem.{CacheBlockBytes, InSubsystem, RocketTileAttachParams, SBUS, SystemBusKey, TLBusWrapperLocation, TilesLocated}

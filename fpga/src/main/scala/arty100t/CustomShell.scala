@@ -2,7 +2,7 @@ package chipyard.fpga.arty100t
 
 import chisel3.{Bool, Wire}
 import freechips.rocketchip.diplomacy.InModuleBody
-import sifive.fpgashells.shell.{ClockInputDesignInput, ClockInputOverlayKey, ClockInputShellInput, DDROverlayKey, DDRShellInput, GPIOOverlayKey, GPIOShellInput, JTAGDebugOverlayKey, JTAGDebugShellInput, SPIOverlayKey, SPIShellInput, UARTOverlayKey, UARTShellInput}
+import sifive.fpgashells.shell.{ClockInputDesignInput, ClockInputOverlayKey, ClockInputShellInput, DDROverlayKey, DDRShellInput, GPIOOverlayKey, GPIOShellInput, JTAGDebugOverlayKey, JTAGDebugShellInput, SPIFlashOverlayKey, SPIFlashShellInput, SPIOverlayKey, SPIShellInput, UARTOverlayKey, UARTShellInput}
 import sifive.fpgashells.shell.xilinx._
 import org.chipsalliance.cde.config._
 import sifive.blocks.devices.gpio.PeripheryGPIOKey
@@ -13,6 +13,7 @@ class Arty100TCustomShell()(implicit p: Parameters) extends Series7Shell {
   val gpio      = Seq.tabulate(16)(i => {Overlay(GPIOOverlayKey, new GPIOArty100ShellPlacer(this, GPIOShellInput()))})
   val jtag      = Overlay(JTAGDebugOverlayKey, new JTAGDebugArty100ShellPlacer(this, JTAGDebugShellInput()))
   val uart      = Overlay(UARTOverlayKey, new UARTArty100ShellPlacer(this, UARTShellInput()))
+  val flash     = Overlay(SPIFlashOverlayKey, new FlashArty100ShellPlacer(this, SPIFlashShellInput()))
   val sdcard  = Overlay(SPIOverlayKey, new SDCardArty100ShellPlacer(this, SPIShellInput()))
   val ddr       = Overlay(DDROverlayKey, new DDRArty100ShellPlacer(this, DDRShellInput()))
 

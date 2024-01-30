@@ -128,6 +128,60 @@ class GPIOArty100ShellPlacer(val shell: Arty100TCustomShell,
 }
 
 /* =============================================================
+==================== Flash (PMOD-JB) ==========================
+===============================================================*/
+/* Digilent Pmod SF3 <-> Arty PMOD-JA
+
+  PIN ArtyPIN Signal   Desc                  PIN ArtyPIN  Signal    Desc
+   1    E15    ~CS     Chip select/Data3      7    J17     NC       Not connected
+   2    E16    DQ0     Data 0                 8    J18     RST      Reset
+   3    D15    DQ1     Data 1                 9    K15     DQ2      Data 2
+   4    C15    SCK     Serial Clock           10   J15     DQ3      Data 3
+   5           GND     Ground                 11           GND      Ground
+   6           VCC     3.3V                   12           VCC      3.3V
+ */
+
+class FlashArty100PlacedOverlay(val shell: Arty100TCustomShell,
+                                 name: String,
+                                 val designInput: SPIFlashDesignInput,
+                                 val shellInput: SPIFlashShellInput)
+  extends SPIFlashPlacedOverlay(name, designInput, shellInput)
+{
+  shell { InModuleBody {
+    // Map SDIO pins with the physical FPGA pins
+    val packagePinsWithPackageIOs = Seq(
+      ("G13", IOPin(io.qspi_cs)),     // JA-1
+      ("B11", IOPin(io.qspi_dq(0))),      // JA-2
+      ("A11", IOPin(io.qspi_dq(1))),  // JA-3
+      ("D12", IOPin(io.qspi_sck)),  // JA-4
+      ("A18", IOPin(io.qspi_dq(2))),  // JA-9
+      ("K16", IOPin(io.qspi_dq(3)))   // JA-10
+    )
+    println("Placing SPI Flash...")
+    packagePinsWithPackageIOs foreach { case (pin, io) =>
+      println(s"$pin <-> $io")
+    }
+
+    packagePinsWithPackageIOs foreach { case (pin, io) => {
+      shell.xdc.addPackagePin(io, pin)
+      shell.xdc.addIOStandard(io, "LVCMOS33")
+      shell.xdc.addIOB(io)
+    }
+    }
+    packagePinsWithPackageIOs drop 1 foreach { case (pin, io) => {
+      shell.xdc.addPullup(io)
+    }
+    }
+  }
+  }
+}
+class FlashArty100ShellPlacer (val shell: Arty100TCustomShell,
+                                val shellInput: SPIFlashShellInput)(implicit val valName: ValName)
+  extends SPIFlashShellPlacer[Arty100TCustomShell] {
+  def place(designInput: SPIFlashDesignInput) = new FlashArty100PlacedOverlay(shell, valName.name, designInput, shellInput)
+}
+
+/* =============================================================
 ==================== SDCard (PMOD-JB) ==========================
 ===============================================================*/
 
@@ -176,6 +230,7 @@ class SDCardArty100PlacedOverlay(val shell: Arty100TCustomShell,
     }
     }
   }
+
 class SDCardArty100ShellPlacer (val shell: Arty100TCustomShell,
                                 val shellInput: SPIShellInput)(implicit val valName: ValName)
   extends SPIShellPlacer[Arty100TCustomShell] {

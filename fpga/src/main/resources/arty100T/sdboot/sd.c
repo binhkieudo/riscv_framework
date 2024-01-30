@@ -10,11 +10,11 @@
 
 int main(void)
 {
-	REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
+	// REG32(uart, UART_REG_TXCTRL) = UART_TXEN;
 
-	kputs("BOOT");
+	// kputs("BOOT");
 
-	__asm__ __volatile__ ("fence.i" : : : "memory");
+	// __asm__ __volatile__ ("fence.i" : : : "memory");
 
 	return 0;
 }

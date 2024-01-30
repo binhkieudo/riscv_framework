@@ -140,17 +140,12 @@ class Arty100TinyHarness(override implicit val p: Parameters) extends Arty100TCu
   val uartOverlay = dp(UARTOverlayKey).head.place(UARTDesignInput(io_uart_bb))
 
   /*** SDCard ***/
-  val io_sdcard_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).head))
+  val io_sdcard_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).headOption.getOrElse(SPIParams(0))))
   val sdcardOverlay = dp(SPIOverlayKey).head.place(SPIDesignInput(dp(PeripherySPIKey).head, io_sdcard_bb))
 
-  /*** DDR ***/
-//  val ddrOverlay = dp(DDROverlayKey).head.place(DDRDesignInput(dp(ExtTLMem).get.master.base, dutWrangler.node, harnessSysPLLNode)).asInstanceOf[DDRArty100PlacedOverlay]
-//  val ddrClient = TLClientNode(Seq(TLMasterPortParameters.v1(Seq(TLMasterParameters.v1(
-//    name = "chip_ddr",
-//    sourceId = IdRange(0, 1 << dp(ExtTLMem).get.master.idBits)
-//  )))))
-//  val ddrBlockDuringReset = LazyModule(new TLBlockDuringReset(4))
-//  ddrOverlay.overlayOutput.ddr := ddrBlockDuringReset.node := ddrClient
+  /*** SPI Flash ***/
+  val io_flash_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).headOption.getOrElse(SPIParams(1))))
+  val flashOverlay = dp(SPIFlashOverlayKey).head.place(SPIFlashDesignInput(io_flash_bb))
 
   override lazy val module = new Arty100TinyTestHarnessImp(_outer = this)
 }
