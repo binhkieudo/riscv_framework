@@ -26,14 +26,12 @@ class TinyRocketConfig extends Config(
   new chipyard.config.AbstractConfig)
 
 class SmallRocketConfig extends Config(
-//  new freechips.rocketchip.subsystem.WithNBanks(0) ++             // remove L2$
-  new freechips.rocketchip.subsystem.WithNoMemPort ++             // remove backing memory
-//  new freechips.rocketchip.subsystem.WithoutMulDiv ++           // remove mult/div
-//  new freechips.rocketchip.subsystem.WithL1DCacheSets(16) ++      // 1KB
-//  new freechips.rocketchip.subsystem.WithL1ICacheSets(16) ++      // 1KB
-//  new WithBootROMSize (size = 0x2000) ++                        // 4-KB BootROM
-  new testchipip.WithMbusScratchpad(size=(1 << 13)) ++
-  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++        // Only allow single core
+  new freechips.rocketchip.subsystem.WithIncoherentBusTopology ++ // use incoherent bus topology
+  new freechips.rocketchip.subsystem.WithNBanks(0) ++           // remove L2$
+  new freechips.rocketchip.subsystem.WithNoMemPort ++           // remove backing memory
+  new freechips.rocketchip.subsystem.WithL1ICacheSets(8) ++    // 1-KB ICache
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(32) ++    // 2-KB DCache
+  new freechips.rocketchip.subsystem.With1TinyCore ++           // Only allow single core
   new chipyard.config.AbstractConfig)
 
 class SmallRocketMemConfig extends Config(

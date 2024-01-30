@@ -48,6 +48,7 @@ int main(int mhartid, char** dump)
 			// Run thread
 			void (*func_ptr)(int, unsigned int) = (void*)address;
 			(*func_ptr)(mhartid, thread_id);
+			// mux_unlock();
 		}
 		else if (threadRdPtr_val == threadWrPtr_val) {
 			if (thread_id == 0xffffffff) { // ternimate signal
@@ -60,6 +61,7 @@ int main(int mhartid, char** dump)
 				mux_unlock();
 				void (*func_ptr)(int, unsigned int) = (void*)address;
 				(*func_ptr)(mhartid, thread_id);
+				// mux_unlock();
 			}
 		}
 		mux_unlock();

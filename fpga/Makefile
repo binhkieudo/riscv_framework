@@ -14,7 +14,7 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= arty100t4CoresMT
+SUB_PROJECT ?= arty100tTiny
 
 ############## SINGLE CORE CONFIGURATIONS #########################
 # Using DDR without L2 Cache

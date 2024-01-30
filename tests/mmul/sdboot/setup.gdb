@@ -1,15 +1,5 @@
 # file: step_mult.gdb
 
-target remote :3333
-
-set  disassemble-next-line on
-show disassemble-next-line
-set pagination off
-set logging enable on
-
-load
-set $pc = 0x10000
-
 define step_mult
     set $step_mult_max = 1000
     if $argc >= 1

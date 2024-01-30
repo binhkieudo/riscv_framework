@@ -21,9 +21,9 @@ void thread_init(void) {
     threadId = 0;
     mux_unlock();
     
-    REG32(clint, CLINT_MSIP1) = CLINT_MSIPEN;
-    REG32(clint, CLINT_MSIP2) = CLINT_MSIPEN;
-    REG32(clint, CLINT_MSIP3) = CLINT_MSIPEN;
+    // REG32(clint, CLINT_MSIP1) = CLINT_MSIPEN;
+    // REG32(clint, CLINT_MSIP2) = CLINT_MSIPEN;
+    // REG32(clint, CLINT_MSIP3) = CLINT_MSIPEN;
 }
 
 void thread_create(void *func_ptr) {
@@ -39,12 +39,12 @@ void thread_join(void) {
     (*threadWrPtr)->address = 0;
     (*threadWrPtr)->thread_id = 0xffffffff;
 
-    // mux_lock();
-    // if ((*threadRdPtr)->thread_id != 0xffffffff) {
-    //     mux_unlock();
-    //     void *hart0_ptr = (void*)HART0_START;
-    //     void (*func_ptr)(void) = hart0_ptr;
-    //     (*func_ptr)();
-    // }
-    // else mux_unlock();
+    mux_lock();
+    if ((*threadRdPtr)->thread_id != 0xffffffff) {
+        mux_unlock();
+        void *hart0_ptr = (void*)HART0_START;
+        void (*func_ptr)(void) = hart0_ptr;
+        (*func_ptr)();
+    }
+    else mux_unlock();
 }
