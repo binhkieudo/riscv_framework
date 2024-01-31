@@ -64,17 +64,7 @@ SECTIONS
   } >memory_mem  :bss
 
   PROVIDE(_end = .);
+  PROVIDE(_sp = .);
+  PROVIDE(_heap_end = .);
 
-  /*
-   * heap_stack_region_usable_end: (ORIGIN(memory_mem) + LENGTH(memory_mem))
-   * heap_stack_min_size: 4096
-   * heap_stack_max_size: 1048576
-   */
-  PROVIDE(_sp = ALIGN(MIN((ORIGIN(memory_mem) + LENGTH(memory_mem)), _ebss + 1048576) - 7, 8));
-  PROVIDE(_heap_end = _sp - 2048);
-
-  /* This section is a noop and is only used for the ASSERT */
-  .stack : {
-    ASSERT(_sp >= (_ebss + 4096), "Error: No room left for the heap and stack");
-  }
 }
