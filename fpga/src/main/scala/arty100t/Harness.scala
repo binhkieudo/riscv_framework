@@ -144,8 +144,8 @@ class Arty100TinyHarness(override implicit val p: Parameters) extends Arty100TCu
   val sdcardOverlay = dp(SPIOverlayKey).head.place(SPIDesignInput(dp(PeripherySPIKey).head, io_sdcard_bb))
 
   /*** SPI Flash ***/
-  val io_flash_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).headOption.getOrElse(SPIParams(1))))
-  val flashOverlay = dp(SPIFlashOverlayKey).head.place(SPIFlashDesignInput(io_flash_bb))
+//  val io_flash_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).headOption.getOrElse(SPIParams(1))))
+//  val flashOverlay = dp(SPIFlashOverlayKey).head.place(SPIFlashDesignInput(io_flash_bb))
 
   override lazy val module = new Arty100TinyTestHarnessImp(_outer = this)
 }
