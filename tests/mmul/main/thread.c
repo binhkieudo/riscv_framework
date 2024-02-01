@@ -21,9 +21,9 @@ void thread_init(void) {
     threadId = 0;
     mux_unlock();
     
-    // REG32(clint, CLINT_MSIP1) = CLINT_MSIPEN;
-    // REG32(clint, CLINT_MSIP2) = CLINT_MSIPEN;
-    // REG32(clint, CLINT_MSIP3) = CLINT_MSIPEN;
+    REG32(clint, CLINT_MSIP1) = CLINT_MSIPEN;
+    REG32(clint, CLINT_MSIP2) = CLINT_MSIPEN;
+    REG32(clint, CLINT_MSIP3) = CLINT_MSIPEN;
 }
 
 void thread_create(void *func_ptr) {

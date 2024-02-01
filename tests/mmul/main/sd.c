@@ -19,8 +19,9 @@ void foo(int hartid, unsigned int thread_id) {
 	// kprintf("Core %x run thread 0x%x\r\n", hartid, thread_id);
 	// for (int i = 0; i < 100000; i++);
 	// mux_unlock();
-	for (int i = 0; i < 100; i = i + 1){
-		mat[thread_id*100 + i] = hartid;
+	mat[thread_id*100] = hartid;
+	for (int i = 1; i < 100; i = i + 1){
+		mat[thread_id*100 + i] = mat[thread_id*100 + i - 1] + 1;
 	}
 } 
 
@@ -38,7 +39,10 @@ int main(int thread_0, char** dump)
 	// 	thread_create(&foo);
 	thread_join();
 
-	for (int i = 0; i < 400; i++) kprintf("%d\r\n", mat[i]);
+	kputs("\r\n");
+	kputs("START\r\n");
+	for (int i = 0; i < 400; i++) kprintf("A= %d\r\n", mat[i]);
+	kputs("END\r\n");
 	while (1);
 
 	return 0;

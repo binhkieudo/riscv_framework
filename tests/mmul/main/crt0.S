@@ -15,9 +15,6 @@
   .globl _prog_start
   .globl hart0_sym
 _prog_start:
-  ld s0, 0(a1)
-  la s1, hart0_sym
-  sd s0, 0(s1)
   li sp, (0x80000000 + 0xffff000)
   call main
 _loop:
