@@ -45,7 +45,7 @@
 #define MASKROM_MEM_ADDR _AC(0x10000,UL)
 #define MASKROM_MEM_SIZE _AC(0x10000,UL)
 #define BRAM_MEM_ADDR _AC(0x70000000,UL)
-#define BRAM_MEM_SIZE _AC(0x1000,UL)
+#define BRAM_MEM_SIZE _AC(0x2000,UL)
 #define MEMORY_MEM_ADDR _AC(0x80000000,UL)
 #define MEMORY_BOOT_SIZE _AC(1 << 20,UL)  // 1-MB
 #define MEMORY_MEM_SIZE _AC(1 << 20,UL)  // 30-MB
@@ -62,7 +62,9 @@
 #define SPI_CTRL_SIZE _AC(0x1000,UL)
 
 // IOF masks
-#define MUTEX_KEY       (BRAM_MEM_ADDR + 0xfe0)
+#define MUTEX_KEY       (BRAM_MEM_ADDR + 0x1fe0)
+#define THREAD_RDPTR    (BRAM_MEM_ADDR + 0x1ff0)
+#define THREAD_WRPTR    (BRAM_MEM_ADDR + 0x1ff8)
 
 // Interrupt numbers
 #define UART_INT_BASE 1

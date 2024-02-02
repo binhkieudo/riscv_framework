@@ -18,8 +18,8 @@ struct threadPointer {
 	unsigned int thread_id;
 };
 
-static volatile struct threadPointer** threadRdPtr = (volatile struct threadPointer**)(THREAD_QUEUE + 0xff0);
-static volatile struct threadPointer** threadWrPtr = (volatile struct threadPointer**)(THREAD_QUEUE + 0xff8);
+static volatile struct threadPointer** threadRdPtr = (volatile struct threadPointer**)THREAD_RDPTR;
+static volatile struct threadPointer** threadWrPtr = (volatile struct threadPointer**)THREAD_WRPTR;
 static const unsigned int threadPointerSize = sizeof(struct threadPointer);
 
 

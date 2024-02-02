@@ -53,12 +53,12 @@ class BigRocketMemConfig extends Config(
 class FourCoreRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
   new WithRocketDCacheScratchpad ++
-  new testchipip.WithSbusScratchpad(base=0x70000000L, size = (4 << 10), banks=1) ++
+  new testchipip.WithSbusScratchpad(base=0x70000000L, size = (8 << 10), banks=1) ++
   new freechips.rocketchip.subsystem.WithL1ICacheSets(sets=64) ++
   new freechips.rocketchip.subsystem.WithL1ICacheWays(ways=1) ++
   new freechips.rocketchip.subsystem.WithL1DCacheSets(sets=64) ++
   new freechips.rocketchip.subsystem.WithL1DCacheWays(ways=1) ++
-  new freechips.rocketchip.subsystem.WithNBigCores(4) ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(4) ++
   new chipyard.config.AbstractConfig)
 
 class WithBootROMSize(size: Int = 0x1000) extends Config((site, here, up) => {

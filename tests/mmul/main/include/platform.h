@@ -60,7 +60,9 @@
 #define SPI_CTRL_SIZE _AC(0x1000,UL)
 
 // IOF masks
-#define MUTEX_KEY       (BRAM_MEM_ADDR + 0xfe0)
+#define MUTEX_KEY       (BRAM_MEM_ADDR + 0x1fe0)
+#define THREAD_RDPTR    (BRAM_MEM_ADDR + 0x1ff0)
+#define THREAD_WRPTR    (BRAM_MEM_ADDR + 0x1ff8)
 
 // Interrupt numbers
 #define UART_INT_BASE 1

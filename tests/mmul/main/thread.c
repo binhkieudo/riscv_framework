@@ -20,15 +20,35 @@ void thread_init(void) {
     threadWrPtr_val = THREAD_QUEUE;
     threadId = 0;
     mux_unlock();
-    
+}
+
+void thread_init2(void) {
+    mux_lock();
+    *threadWrPtr = (struct threadPointer *)THREAD_QUEUE;
+    *threadRdPtr = (struct threadPointer *)THREAD_QUEUE;
+    threadWrPtr_val = THREAD_QUEUE;
+    threadId = 0;
+    mux_unlock();
+
+    REG32(clint, CLINT_MSIP1) = CLINT_MSIPEN;
+}
+
+void thread_init4(void) {
+    mux_lock();
+    *threadWrPtr = (struct threadPointer *)THREAD_QUEUE;
+    *threadRdPtr = (struct threadPointer *)THREAD_QUEUE;
+    threadWrPtr_val = THREAD_QUEUE;
+    threadId = 0;
+    mux_unlock();
+
     REG32(clint, CLINT_MSIP1) = CLINT_MSIPEN;
     REG32(clint, CLINT_MSIP2) = CLINT_MSIPEN;
     REG32(clint, CLINT_MSIP3) = CLINT_MSIPEN;
 }
 
-void thread_create(void *func_ptr) {
+void thread_create(void *func_ptr, unsigned int thread_id) {
     (*threadWrPtr)->address = func_ptr;
-    (*threadWrPtr)->thread_id = threadId;
+    (*threadWrPtr)->thread_id = thread_id;
 
     threadWrPtr_val = threadWrPtr_val + threadPointerSize;
     *threadWrPtr = (volatile struct threadPointer*)threadWrPtr_val;
@@ -47,4 +67,6 @@ void thread_join(void) {
         (*func_ptr)();
     }
     else mux_unlock();
+
+    (*threadWrPtr)->thread_id = 0x0;
 }

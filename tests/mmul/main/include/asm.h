@@ -12,4 +12,6 @@ extern void sem_signal(char* channel);
 extern unsigned int get_hartid(void);
 extern void atomic_write(char* addr, unsigned int value);
 
+extern unsigned int randi(unsigned int limit);
+
 #endif

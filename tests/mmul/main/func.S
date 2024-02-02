@@ -9,6 +9,7 @@
   .globl get_hartid
   .globl atomic_write
   .globl sem_wait
+  .globl randi
 // ====== Lock ====================  
 mux_lock:
     li t0, 1
@@ -49,4 +50,16 @@ sem_wait:
 sem_signal:
     li t0, 1
     amoswap.w t1, t0, (a0)
+    ret
+// ====== Random integer ==========
+randi:
+    addi sp, sp, -16
+    sd s0, 0(sp)
+    sd s1, 8(sp)
+    mv s0, a0 // limit
+    csrr s1, mcycle
+    remuw a0, s1, s0
+    ld s0, 0(sp)
+    ld s1, 8(sp)
+    addi sp, sp, 16
     ret
