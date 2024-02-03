@@ -13,7 +13,7 @@
 
 #define DEBUG
 
-#define SIZE 256
+#define SIZE 64
 
 int A[SIZE][SIZE];
 int B[SIZE][SIZE];
@@ -37,7 +37,6 @@ int main(int thread_0, char** dump)
 	unsigned long tend = 0;
 	
 	unsigned long tsingle = 0;
-	unsigned long tmulti2 = 0;
 	unsigned long tmulti4 = 0;
 	unsigned long speed_up = 0;
 
@@ -62,25 +61,6 @@ int main(int thread_0, char** dump)
 	tend = read_csr(mcycle);
 	tsingle = tend-tstart;
 	kprintf("Execution time: %ld (cycles)\r\n", tsingle);
-
-	// 2-cores
-	kputs("==> Running with 2 cores...");
-	error = 0;
-	tstart = read_csr(mcycle);
-	thread_init2();
-	for (int i = 0; i < SIZE; i = i + 1) {
-		thread_create(&foo, i);
-	}
-	thread_join();
-	tend = read_csr(mcycle);
-	tmulti2 = tend-tstart;
-	kprintf("Execution time (multi-thread): %ld (cycles)\r\n", tmulti2);
-	for (int i = 0; i < SIZE; i = i + 1)
-		for (int j = 0; j < SIZE; j = j + 1)
-			if (C_single[i][j] != C_multi[i][j]) error++;
-	speed_up = tsingle / tmulti2;
-	kprintf("Error count: %d \r\n", error);
-	kprintf("Speed up (over single): %ld (times)\r\n", speed_up);
 	
 	// 4-cores
 	kputs("==> Running with 4 cores...");
