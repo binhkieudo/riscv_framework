@@ -391,43 +391,6 @@ int main(int thread_0, char** dump)
 		thread_join();
 	}
 
-	// int topPoint = 0;
-	// int diagPoint = 0;
-	// int leftPoint = 0;
-	// int maxPoint = 0;
-	
-	// for (int i = 0; i < WORD; i++) {
-	// 	for (int j = 0; j < REF_SIZE; j ++) {
-	// 		if (i == 0) {
-	// 			maxPoint = 0;
-	// 			topPoint = -2;
-	// 			if (se[i] == ref[j]) diagPoint = 1;
-	// 			else diagPoint = -1;
-	// 			if (j == 0) leftPoint = -2;
-	// 			else leftPoint = map[i][j-1] - 2;
-
-	// 			if (topPoint > maxPoint) maxPoint = topPoint;
-	// 			if (diagPoint > maxPoint) maxPoint = diagPoint;
-	// 			if (leftPoint > maxPoint) maxPoint = leftPoint;
-
-	// 			map[i][j] = maxPoint;
-	// 		}
-	// 		else {
-	// 			maxPoint = 0;
-	// 			topPoint = map[i-1][j] - 2;
-	// 			if (se[i] == ref[j]) diagPoint = 1;
-	// 			else diagPoint = -1;
-	// 			if (j == 0) leftPoint = -2;
-	// 			else leftPoint = map[i][j-1] - 2;
-
-	// 			if (topPoint > maxPoint) maxPoint = topPoint;
-	// 			if (diagPoint > maxPoint) maxPoint = diagPoint;
-	// 			if (leftPoint > maxPoint) maxPoint = leftPoint;
-
-	// 			map[i][j] = maxPoint;
-	// 		}
-	// 	}
-	// }
 	tend = read_csr(mcycle);
 
 	kprintf("Execution time (multi-thread): %ld (cycles)\r\n", tstart);
