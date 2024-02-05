@@ -87,8 +87,10 @@ After formatting the SD Card, print the new partition and save the configuration
 
 Vivado must be in your PATH
 
-Reduce the BootROM size
+To reduce the BootROM size
+
 In file /riscv_framework/generators/rocket-chip/src/main/scala/devices/tilelinkBootROM.scala
+
 Replace line 79
 ```shell
 rom.array() ++ subsystem.dtb.contents
