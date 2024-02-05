@@ -83,9 +83,20 @@ Then format the SD Card with the following options:
 After formatting the SD Card, print the new partition and save the configurations.
 <img src="https://github.com/binhkieudo/riscv_framework/assets/22954544/a657a6da-617b-409a-8b2f-4f7ec7f96128" alt="drawing" width="700"/>
 
-## Build your first FPGA prototype (currently support Arty100T)
+## Build your first tiny FPGA prototype (currently support Arty100T)
 
 Vivado must be in your PATH
+
+Reduce the BootROM size
+In file /riscv_framework/generators/rocket-chip/src/main/scala/devices/tilelinkBootROM.scala
+Replace line 79
+```shell
+rom.array() ++ subsystem.dtb.contents
+```
+by
+```shell
+rom.array() //++ subsystem.dtb.contents
+```
 
 Enter fpga folder
 ```shell
