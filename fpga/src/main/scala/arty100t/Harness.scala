@@ -140,7 +140,7 @@ class Arty100TinyHarness(override implicit val p: Parameters) extends Arty100TCu
   val uartOverlay = dp(UARTOverlayKey).head.place(UARTDesignInput(io_uart_bb))
 
   /*** SDCard ***/
-  val io_sdcard_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).headOption.getOrElse(SPIParams(0))))
+  val io_sdcard_bb = BundleBridgeSource(() => new SPIPortIO(dp(PeripherySPIKey).head))
   val sdcardOverlay = dp(SPIOverlayKey).head.place(SPIDesignInput(dp(PeripherySPIKey).head, io_sdcard_bb))
 
   /*** SPI Flash ***/
@@ -182,10 +182,8 @@ class Arty100TinyTestHarnessImp(_outer: Arty100TinyHarness) extends LazyRawModul
   def referenceReset = _outer.dutClock.in.head._1.reset
   def success = { require(false, "Unused"); false.B }
 
-//  _outer.ddrOverlay.mig.module.clock := harnessBinderClock
-//  _outer.ddrOverlay.mig.module.reset := harnessBinderReset
-//  _outer.ddrBlockDuringReset.module.clock := harnessBinderClock
-//  _outer.ddrBlockDuringReset.module.reset := harnessBinderReset.asBool || !_outer.ddrOverlay.mig.module.io.port.init_calib_complete
+  childClock := harnessBinderClock
+  childReset := harnessBinderReset
 
   instantiateChipTops()
 }

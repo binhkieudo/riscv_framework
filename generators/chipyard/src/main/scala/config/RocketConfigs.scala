@@ -31,7 +31,7 @@ class SmallRocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithNBanks(0) ++           // remove L2$
   new freechips.rocketchip.subsystem.WithNoMemPort ++           // remove backing memory
   new freechips.rocketchip.subsystem.WithL1ICacheSets(8) ++    // 1-KB ICache
-  new freechips.rocketchip.subsystem.WithL1DCacheSets(32) ++    // 2-KB DCache
+  new freechips.rocketchip.subsystem.WithL1DCacheSets(128) ++    // 2-KB DCache
   new freechips.rocketchip.subsystem.With1TinyCore ++           // Only allow single core
   new chipyard.config.AbstractConfig)
 

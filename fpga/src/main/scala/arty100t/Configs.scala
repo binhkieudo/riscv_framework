@@ -51,7 +51,7 @@ class WithDMEMBootROM extends Config((site, here, up) => {
     // Build the bootrom
     val make = s"make -C fpga/src/main/resources/arty100T/sdboot XLEN=${site(XLen)} PBUS_CLK=${freqMHz}"
     require (make.! == 0, "Failed to build bootrom")
-    p.copy(size = 128, hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
+    p.copy(size = 2048, hang = 0x10000, contentFileName = s"./fpga/src/main/resources/arty100T/sdboot/build/sdboot.bin")
   }
 })
 
