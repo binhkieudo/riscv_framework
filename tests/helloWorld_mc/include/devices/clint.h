@@ -16,4 +16,5 @@
 #define CLINT_MTIME_size    0x8
 
 #define CLINT_MSIPEN    0x1
+#define CLINT_MSIPDIS   0x0
 #endif /* _SIFIVE_CLINT_H */
