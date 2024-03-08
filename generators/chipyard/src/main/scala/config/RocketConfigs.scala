@@ -15,6 +15,19 @@ import freechips.rocketchip.subsystem._
 // --------------
 
 class RocketConfig extends Config(
+  new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core
+  new chipyard.config.AbstractConfig)
+
+class RocketMempressConfig extends Config(
+  new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
+  new mempress.WithMemPress (singleL2=false) ++
+  new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core
+  new chipyard.config.AbstractConfig)
+
+class RocketMempressCacheConfig extends Config(
+  new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
+  new mempress.WithMemPress ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core
   new chipyard.config.AbstractConfig)
 
@@ -37,8 +50,7 @@ class SmallRocketConfig extends Config(
 
 class SmallRocketMemConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
-//  new WithL1DScratchAddressSets(address = 0x40000000L) ++
-//  new freechips.rocketchip.subsystem.WithL1DCacheSets(256) ++
+  new freechips.rocketchip.subsystem.WithNBanks(2) ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++             // single tiny rocket-core
   new chipyard.config.AbstractConfig
 )

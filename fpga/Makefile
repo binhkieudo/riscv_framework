@@ -14,7 +14,38 @@ sim_name := none
 #########################################################################################
 # include shared variables
 #########################################################################################
-SUB_PROJECT ?= arty100tTinyMemCache
+SUB_PROJECT ?= arty100tMemtest
+
+############## Default CONFIGURATIONS #########################
+ifeq ($(SUB_PROJECT),arty100t)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketArty100TConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
+
+ifeq ($(SUB_PROJECT),arty100tCache)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketArty100TCacheConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
 
 ############## SINGLE CORE CONFIGURATIONS #########################
 # Using DDR without L2 Cache
@@ -73,6 +104,37 @@ ifeq ($(SUB_PROJECT),arty100tTiny)
 	VLOG_MODEL        ?= Arty100TinyHarness
 	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
 	CONFIG            ?= RocketTinyArty100TConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
+
+############## Memory test #########################
+ifeq ($(SUB_PROJECT),arty100tMemtest)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketArty100TTestMemConfig
+	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
+	GENERATOR_PACKAGE ?= chipyard
+	TB                ?= none # unused
+	TOP               ?= ChipTop
+	BOARD             ?= arty_a7_100
+	FPGA_BRAND        ?= xilinx
+endif
+
+ifeq ($(SUB_PROJECT),arty100tMemtestCache)
+	# TODO: Fix with Arty
+	SBT_PROJECT       ?= fpga_platforms
+	MODEL             ?= Arty100THarness
+	VLOG_MODEL        ?= Arty100THarness
+	MODEL_PACKAGE     ?= chipyard.fpga.arty100t
+	CONFIG            ?= RocketArty100TTestMemCacheConfig
 	CONFIG_PACKAGE    ?= chipyard.fpga.arty100t
 	GENERATOR_PACKAGE ?= chipyard
 	TB                ?= none # unused

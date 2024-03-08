@@ -186,10 +186,24 @@ class RocketArty100TConfig extends Config(
   new chipyard.config.WithBroadcastManager ++ // no l2
   new chipyard.RocketConfig)
 
+class RocketArty100TCacheConfig extends Config(
+  new WithArty100TTweaks ++
+  new chipyard.RocketConfig)
+
+class RocketArty100TTestMemConfig extends Config(
+  new WithArty100TTweaks ++
+  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.RocketMempressConfig)
+
+class RocketArty100TTestMemCacheConfig extends Config(
+  new WithArty100TTweaks ++
+  new chipyard.RocketMempressCacheConfig)
+
 class RocketTinyArty100TConfig extends Config(
   new WithArty100TinyTweaks ++
   new chipyard.config.WithBroadcastManager ++ // no l2
   new chipyard.SmallRocketConfig)
+
 
 class RocketTinyMemNoCacheArty100TConfig extends Config(
   new WithArty100TTweaks ++
@@ -199,7 +213,7 @@ class RocketTinyMemNoCacheArty100TConfig extends Config(
 class RocketBigMemNoCacheArty100TConfig extends Config(
   new WithArty100TTweaks ++
   new chipyard.config.WithBroadcastManager ++ // no l2
-  new chipyard.BigRocketMemConfig)
+  new chipyard.SmallRocketMemConfig)
 
 class RocketTinyMemCacheArty100TConfig extends Config(
   new WithArty100TTweaks ++
