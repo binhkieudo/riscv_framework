@@ -14,6 +14,7 @@ import freechips.rocketchip.subsystem._
 // Rocket Configs
 // --------------
 
+
 class RocketConfig extends Config(
   new freechips.rocketchip.subsystem.WithCoherentBusTopology ++
   new freechips.rocketchip.subsystem.WithNSmallCores(1) ++         // single rocket-core

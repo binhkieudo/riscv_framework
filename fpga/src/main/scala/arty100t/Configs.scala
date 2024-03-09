@@ -181,6 +181,11 @@ class WithArty100TMcTweaks extends Config(
   new freechips.rocketchip.subsystem.WithExtMemSize(BigInt(64) << 20) ++ // 256mb on ARTY
   new freechips.rocketchip.subsystem.WithoutTLMonitors)
 
+class IbexArty100TConfig extends Config(
+  new WithArty100TinyTweaks ++
+  new chipyard.config.WithBroadcastManager ++ // no l2
+  new chipyard.IbexConfig)
+
 class RocketArty100TConfig extends Config(
   new WithArty100TTweaks ++
   new chipyard.config.WithBroadcastManager ++ // no l2
