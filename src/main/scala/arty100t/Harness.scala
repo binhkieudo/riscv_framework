@@ -1,22 +1,17 @@
 package chipyard.riscv_framework.arty100t_tiny
 
+import chipyard._
+import chipyard.harness._
 import chisel3._
 import chisel3.util._
 import freechips.rocketchip.diplomacy._
-import org.chipsalliance.cde.config.{Parameters}
-import freechips.rocketchip.tilelink._
 import freechips.rocketchip.prci._
-import freechips.rocketchip.subsystem.{SystemBusKey}
-
-import sifive.fpgashells.shell.xilinx._
-import sifive.fpgashells.shell._
-import sifive.fpgashells.clocks._
-import sifive.fpgashells.ip.xilinx.{IBUF, PowerOnResetFPGAOnly}
-
+import freechips.rocketchip.subsystem.SystemBusKey
+import freechips.rocketchip.tilelink._
+import org.chipsalliance.cde.config.Parameters
 import sifive.blocks.devices.uart._
-
-import chipyard._
-import chipyard.harness._
+import sifive.fpgashells.clocks._
+import sifive.fpgashells.shell._
 
 class Arty100THarness(override implicit val p: Parameters) extends Arty100TShell {
   def dp = designParameters

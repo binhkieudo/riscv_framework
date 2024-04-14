@@ -1,4 +1,4 @@
-package chipyard.riscv_framework.arty100t_tiny
+package riscv_framework.fpga
 
 import chipyard._
 import chipyard.harness._
@@ -13,8 +13,9 @@ import sifive.fpgashells.shell._
 import sifive.fpgashells.shell.xilinx._
 import testchipip.serdes._
 
-class WithArty100TUARTTSI extends HarnessBinder({
+class MyWithArty100TUARTTSI extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: UARTTSIPort, chipId: Int) => {
+
     val ath = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
     val harnessIO = IO(new UARTPortIO(port.io.uartParams)).suggestName("uart_tsi")
     harnessIO <> port.io.uart
@@ -26,28 +27,29 @@ class WithArty100TUARTTSI extends HarnessBinder({
       ath.xdc.addIOStandard(io, "LVCMOS33")
       ath.xdc.addIOB(io)
     } }
-
-    ath.other_leds(1) := port.io.dropped
-    ath.other_leds(9) := port.io.tsi2tl_state(0)
-    ath.other_leds(10) := port.io.tsi2tl_state(1)
-    ath.other_leds(11) := port.io.tsi2tl_state(2)
-    ath.other_leds(12) := port.io.tsi2tl_state(3)
+    print ("Config TSI done!\r\n")
+//    ath.other_leds(1) := port.io.dropped
+//    ath.other_leds(9) := port.io.tsi2tl_state(0)
+//    ath.other_leds(10) := port.io.tsi2tl_state(1)
+//    ath.other_leds(11) := port.io.tsi2tl_state(2)
+//    ath.other_leds(12) := port.io.tsi2tl_state(3)
   }
 })
 
 
-class WithArty100TDDRTL extends HarnessBinder({
+class MyWithArty100TDDRTL extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: TLMemPort, chipId: Int) => {
     val artyTh = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
     val bundles = artyTh.ddrClient.out.map(_._1)
     val ddrClientBundle = Wire(new HeterogeneousBag(bundles.map(_.cloneType)))
     bundles.zip(ddrClientBundle).foreach { case (bundle, io) => bundle <> io }
     ddrClientBundle <> port.io
+    print ("Config DDR done!!!\r\n")
   }
 })
 
 // Uses PMOD JA/JB
-class WithArty100TSerialTLToGPIO extends HarnessBinder({
+class MyWithArty100TSerialTLToGPIO extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: SerialTLPort, chipId: Int) => {
     val artyTh = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
     val harnessIO = IO(chiselTypeOf(port.io)).suggestName("serial_tl")
@@ -94,12 +96,14 @@ class WithArty100TSerialTLToGPIO extends HarnessBinder({
         artyTh.xdc.clockDedicatedRouteFalse(clkIO)
       }
     }
+    print ("Config GPIO done!\r\n")
   }
 })
 
 // Maps the UART device to the on-board USB-UART
-class WithArty100TUART(rxdPin: String = "A9", txdPin: String = "D10") extends HarnessBinder({
+class MyWithArty100TUART(rxdPin: String = "A9", txdPin: String = "D10") extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: UARTPort, chipId: Int) => {
+
     val ath = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
     val harnessIO = IO(chiselTypeOf(port.io)).suggestName("uart")
     harnessIO <> port.io
@@ -111,13 +115,13 @@ class WithArty100TUART(rxdPin: String = "A9", txdPin: String = "D10") extends Ha
       ath.xdc.addIOStandard(io, "LVCMOS33")
       ath.xdc.addIOB(io)
     } }
+    print ("Config UART done!\r\n")
   }
 })
 
-// Maps the UART device to PMOD JD pins 3/7
-class WithArty100TPMODUART extends WithArty100TUART("G2", "F3")
+class MyWithArty100TPMODUART extends MyWithArty100TUART("G2", "F3")
 
-class WithArty100TJTAG extends HarnessBinder({
+class MyWithArty100TJTAG extends HarnessBinder({
   case (th: HasHarnessInstantiators, port: JTAGPort, chipId: Int) => {
     val ath = th.asInstanceOf[LazyRawModuleImp].wrapper.asInstanceOf[Arty100THarness]
     val harnessIO = IO(chiselTypeOf(port.io)).suggestName("jtag")
@@ -137,5 +141,6 @@ class WithArty100TJTAG extends HarnessBinder({
       ath.xdc.addIOStandard(io, "LVCMOS33")
       ath.xdc.addPullup(io)
     } }
+    print ("Config JTAG done!\r\n")
   }
 })
