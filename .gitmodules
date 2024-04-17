@@ -1,3 +1,6 @@
 [submodule "RoCC_Tutorial"]
 	path = RoCC_Tutorial
 	url = https://github.com/binhkieudo/RoCC_Tutorial.git
+[submodule "chipyard"]
+	path = chipyard
+	url = https://github.com/ucb-bar/chipyard.git
